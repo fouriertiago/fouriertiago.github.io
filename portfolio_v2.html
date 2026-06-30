@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiago Fourier — Portfolio BTS SIO SISR</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0D1117; --panel:#161B22; --panel-hi:#1C2330; --border:#262E3D;
+    --txt:#E6EDF3; --txt-dim:#8B96A5; --txt-mute:#5C6677;
+    --accent:#58A6FF; --green:#3FB950; --amber:#E3B341; --red:#F85149;
+    --loxys:#7A9BBC;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+  ::selection{background:var(--accent);color:var(--bg)}
+  a{color:inherit}
+
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.025;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:rgba(13,17,23,.85);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;height:56px;
+  }
+  .nav-logo{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--txt);text-decoration:none;display:flex;align-items:center;gap:8px}
+  .nav-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .nav-links{display:flex;gap:28px;list-style:none}
+  .nav-links a{font-family:var(--mono);font-size:13px;color:var(--txt-dim);text-decoration:none;transition:color .2s}
+  .nav-links a::before{content:'./';color:var(--txt-mute)}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-cta{
+    font-family:var(--mono);font-size:12px;font-weight:600;
+    background:var(--panel);border:1px solid var(--border);color:var(--green);
+    padding:6px 14px;border-radius:6px;text-decoration:none;transition:all .2s;
+  }
+  .nav-cta:hover{border-color:var(--green);background:rgba(63,185,80,.08)}
+  @media(max-width:880px){.nav-links{display:none}}
+
+  .hero{
+    min-height:100vh;display:flex;align-items:center;
+    padding:100px 40px 60px;position:relative;
+    background:radial-gradient(ellipse 800px 500px at 20% 0%, rgba(88,166,255,.08), transparent),
+               radial-gradient(ellipse 600px 400px at 90% 80%, rgba(122,155,188,.06), transparent);
+  }
+  .hero-grid{max-width:1140px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .hero-status{
+    display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+    color:var(--green);background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.25);
+    padding:5px 12px;border-radius:20px;margin-bottom:24px;letter-spacing:.3px;
+  }
+  .hero-status .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  .hero h1{
+    font-family:var(--sans);font-weight:700;font-size:clamp(38px,4.4vw,58px);
+    line-height:1.08;letter-spacing:-1.5px;margin-bottom:18px;
+  }
+  .hero h1 .grad{background:linear-gradient(135deg,var(--accent),var(--loxys));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-sub{font-size:16.5px;color:var(--txt-dim);max-width:480px;margin-bottom:32px;line-height:1.7}
+  .hero-sub code{font-family:var(--mono);color:var(--accent);background:rgba(88,166,255,.1);padding:1px 6px;border-radius:4px;font-size:14px}
+  .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-fill{
+    font-family:var(--mono);font-weight:600;font-size:13.5px;
+    background:var(--accent);color:#04101F;padding:11px 22px;border-radius:7px;
+    text-decoration:none;transition:transform .15s,box-shadow .15s;display:inline-block;
+  }
+  .btn-fill:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(88,166,255,.3)}
+  .btn-ghost{
+    font-family:var(--mono);font-weight:500;font-size:13.5px;
+    border:1px solid var(--border);color:var(--txt);padding:10px 22px;border-radius:7px;
+    text-decoration:none;transition:border-color .15s,background .15s;display:inline-block;
+  }
+  .btn-ghost:hover{border-color:var(--txt-dim);background:var(--panel)}
+
+  .term{
+    background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden;
+  }
+  .term-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:var(--panel-hi);border-bottom:1px solid var(--border)}
+  .term-dot{width:11px;height:11px;border-radius:50%}
+  .term-bar span{margin-left:8px;font-family:var(--mono);font-size:11.5px;color:var(--txt-mute)}
+  .term-body{padding:18px 20px;font-family:var(--mono);font-size:13px;line-height:1.85;color:var(--txt-dim)}
+  .term-prompt{color:var(--green)}
+  .term-cmd{color:var(--txt)}
+  .term-key{color:var(--accent)}
+  .term-val{color:var(--amber)}
+  .term-cursor{display:inline-block;width:7px;height:14px;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:middle}
+  @keyframes blink{50%{opacity:0}}
+
+  @media(max-width:880px){.hero-grid{grid-template-columns:1fr}}
+
+  section{padding:88px 40px;position:relative;z-index:2}
+  .sec-inner{max-width:1140px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .eyebrow::before{content:'';width:18px;height:1px;background:var(--accent)}
+  .sec-title{font-size:clamp(26px,3vw,38px);font-weight:700;letter-spacing:-1px;margin-bottom:14px}
+  .sec-sub{color:var(--txt-dim);font-size:16px;max-width:560px}
+
+  .ap-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:56px;margin-top:44px;align-items:start}
+  .ap-text p{color:var(--txt-dim);font-size:15.5px;margin-bottom:16px;line-height:1.8}
+  .ap-text strong{color:var(--txt);font-weight:600}
+  .info-list{display:grid;gap:10px;margin-top:24px}
+  .info-row{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13.5px;color:var(--txt-dim)}
+  .info-row .ic{width:30px;height:30px;background:var(--panel);border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .timeline{display:grid;gap:0;position:relative}
+  .tl-item{position:relative;padding:0 0 28px 24px;border-left:1px solid var(--border)}
+  .tl-item:last-child{border-color:transparent;padding-bottom:0}
+  .tl-item::before{content:'';position:absolute;left:-5px;top:2px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .tl-item.now::before{border-color:var(--green);box-shadow:0 0 8px rgba(63,185,80,.5)}
+  .tl-date{font-family:var(--mono);font-size:11.5px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+  .tl-title{font-weight:600;font-size:15px;color:var(--txt)}
+  .tl-sub{font-size:13.5px;color:var(--txt-dim);margin-top:2px}
+
+  #competences{background:var(--panel)}
+  .skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+  .skill-card{
+    background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:24px;
+    transition:transform .2s,border-color .2s;
+  }
+  .skill-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .skill-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .skill-ic{font-size:20px}
+  .skill-title{font-weight:600;font-size:15.5px}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .skill-tag{font-family:var(--mono);font-size:11.5px;background:var(--panel-hi);color:var(--txt-dim);padding:3px 9px;border-radius:5px;border:1px solid var(--border)}
+  @media(max-width:880px){.skill-grid,.ap-grid{grid-template-columns:1fr}}
+  @media(max-width:600px){.skill-grid{grid-template-columns:1fr 1fr}}
+
+  .mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+  .mcard{
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0;
+    cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;
+    overflow:hidden;position:relative;
+  }
+  .mcard:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 16px 40px rgba(88,166,255,.12)}
+  .mcard-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--panel-hi);border-bottom:1px solid var(--border)}
+  .mcard-num{font-family:var(--mono);font-size:11px;color:var(--txt-mute)}
+  .mcard-expand{font-family:var(--mono);font-size:11px;color:var(--accent);opacity:0;transition:opacity .2s}
+  .mcard:hover .mcard-expand{opacity:1}
+  .mcard-body{padding:22px 20px}
+  .mcard-title{font-weight:700;font-size:17px;margin-bottom:10px}
+  .mcard-desc{font-size:13.5px;color:var(--txt-dim);line-height:1.6;margin-bottom:16px}
+  .mcard-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .mcard-tag{font-family:var(--mono);font-size:10.5px;background:var(--bg);color:var(--accent);padding:3px 8px;border-radius:5px;border:1px solid var(--border)}
+  @media(max-width:880px){.mission-grid{grid-template-columns:1fr}}
+
+  #projet{background:var(--panel)}
+  .stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+  .stack-card{
+    background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:18px;
+    text-align:center;transition:transform .2s,border-color .2s;
+  }
+  .stack-card:hover{transform:translateY(-3px);border-color:var(--loxys)}
+  .stack-ic{font-size:24px;margin-bottom:8px}
+  .stack-name{font-weight:600;font-size:13px}
+  .stack-role{font-family:var(--mono);font-size:10.5px;color:var(--txt-mute);margin-top:3px}
+  @media(max-width:880px){.stack-grid{grid-template-columns:1fr 1fr}}
+
+  .flow-list{margin-top:40px;display:grid;gap:0}
+  .flow-row{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+  .flow-row:last-child{border-color:transparent}
+  .flow-n{font-family:var(--mono);font-size:13px;color:var(--accent);width:26px;flex-shrink:0;padding-top:2px}
+  .flow-t{font-weight:600;font-size:14.5px;margin-bottom:2px}
+  .flow-d{font-size:13px;color:var(--txt-dim)}
+
+  .veille-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:44px}
+  .vcard{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;transition:border-color .2s}
+  .vcard:hover{border-color:var(--loxys)}
+  .vcard-date{font-family:var(--mono);font-size:11px;color:var(--loxys);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+  .vcard-title{font-weight:600;font-size:16px;margin-bottom:9px}
+  .vcard-desc{font-size:13.5px;color:var(--txt-dim);line-height:1.65}
+  .vcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .vcard-tag{font-family:var(--mono);font-size:10.5px;background:var(--bg);color:var(--txt-dim);padding:3px 8px;border-radius:5px;border:1px solid var(--border)}
+  @media(max-width:880px){.veille-grid{grid-template-columns:1fr}}
+
+  #contact{text-align:center}
+  footer{border-top:1px solid var(--border);padding:36px 40px;text-align:center}
+  .footer-name{font-family:var(--mono);font-weight:700;font-size:15px;margin-bottom:6px}
+  .footer-sub{font-size:12.5px;color:var(--txt-mute);margin-bottom:18px}
+  .footer-links{display:flex;justify-content:center;gap:22px;margin-bottom:18px;flex-wrap:wrap}
+  .footer-links a{font-family:var(--mono);font-size:12.5px;color:var(--txt-dim);text-decoration:none;transition:color .2s}
+  .footer-links a:hover{color:var(--accent)}
+  .footer-copy{font-size:11px;color:var(--txt-mute)}
+
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(2,5,9,.75);backdrop-filter:blur(4px);
+    z-index:200;display:none;align-items:center;justify-content:center;padding:24px;
+    opacity:0;transition:opacity .25s;
+  }
+  .modal-overlay.open{display:flex;opacity:1}
+  .modal{
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    max-width:720px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+    transform:translateY(16px) scale(.98);transition:transform .25s;
+  }
+  .modal-overlay.open .modal{transform:translateY(0) scale(1)}
+  .modal-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--panel-hi);border-bottom:1px solid var(--border);flex-shrink:0}
+  .modal-bar-left{display:flex;align-items:center;gap:10px}
+  .modal-bar-title{font-family:var(--mono);font-size:13px;color:var(--txt-dim)}
+  .modal-close{
+    width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--bg);
+    color:var(--txt-dim);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;
+    transition:all .15s;
+  }
+  .modal-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+  .modal-tabs{display:flex;gap:4px;padding:10px 20px 0;background:var(--panel-hi);flex-shrink:0}
+  .mtab{
+    font-family:var(--mono);font-size:12px;color:var(--txt-dim);background:transparent;border:none;
+    padding:8px 14px;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s;
+  }
+  .mtab.active{color:var(--accent);background:var(--panel)}
+  .modal-content{padding:26px 28px;overflow-y:auto;flex:1}
+  .modal-content::-webkit-scrollbar{width:8px}
+  .modal-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .modal-title{font-size:22px;font-weight:700;margin-bottom:6px}
+  .modal-sub{font-family:var(--mono);font-size:12.5px;color:var(--accent);margin-bottom:20px}
+  .mpane{display:none}
+  .mpane.active{display:block}
+  .mpane p{font-size:14.5px;color:var(--txt-dim);line-height:1.75;margin-bottom:14px}
+  .mpane ul{list-style:none;display:grid;gap:9px;margin-bottom:14px}
+  .mpane li{font-size:14px;color:var(--txt-dim);padding-left:18px;position:relative;line-height:1.6}
+  .mpane li::before{content:'▸';position:absolute;left:0;color:var(--accent)}
+  .mpane code.block{
+    display:block;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+    padding:14px 16px;font-family:var(--mono);font-size:12.5px;color:var(--txt-dim);
+    white-space:pre-wrap;word-break:break-word;margin-bottom:14px;line-height:1.7;
+  }
+  .mpane code.block .k{color:var(--accent)} .mpane code.block .s{color:var(--amber)} .mpane code.block .c{color:var(--txt-mute)}
+  .mtagrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .mtag{font-family:var(--mono);font-size:11.5px;background:var(--bg);border:1px solid var(--border);color:var(--accent);padding:4px 10px;border-radius:6px}
+
+  @media(max-width:600px){
+    .modal{max-height:92vh}
+    .modal-content{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo"><span class="dot"></span>tfourier@portfolio</a>
+  <ul class="nav-links">
+    <li><a href="#apropos">about</a></li>
+    <li><a href="#competences">skills</a></li>
+    <li><a href="#stage">stage</a></li>
+    <li><a href="#projet">projet</a></li>
+    <li><a href="#veille">veille</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">$ contact</a>
+</nav>
+
+<section class="hero" id="accueil">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-status"><span class="pulse"></span>Disponible — Alternance Septembre 2026</div>
+      <h1>Futur administrateur<br><span class="grad">systèmes &amp; réseaux</span></h1>
+      <p class="hero-sub">Étudiant en BTS SIO option <code>SISR</code> à l'Ésupec Cholet. Je conçois et sécurise des infrastructures réseau — du pare-feu jusqu'à l'automatisation par IA.</p>
+      <div class="hero-btns">
+        <a href="#stage" class="btn-fill">Voir mon stage →</a>
+        <a href="#contact" class="btn-ghost">Me contacter</a>
+      </div>
+    </div>
+    <div class="term">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#FF5F57"></div>
+        <div class="term-dot" style="background:#FEBC2E"></div>
+        <div class="term-dot" style="background:#28C840"></div>
+        <span>tfourier@sisr-core: ~</span>
+      </div>
+      <div class="term-body">
+        <div><span class="term-prompt">tfourier@esupec</span><span class="term-cmd">:~$ neofetch</span></div>
+        <div style="margin-top:8px">
+          <span class="term-key">OS</span>: Debian GNU/Linux 12 (bookworm)<br>
+          <span class="term-key">Host</span>: BTS SIO — Option SISR<br>
+          <span class="term-key">Formation</span>: <span class="term-val">Ésupec Cholet</span> · 2025–2027<br>
+          <span class="term-key">Stage</span>: <span class="term-val">LOXYS Solutions Info.</span><br>
+          <span class="term-key">Stack</span>: OPNsense · Zabbix · Docker<br>
+          <span class="term-key">Langues</span>: FR (natif) · ES (B1) · EN (A2)<br>
+          <span class="term-key">Status</span>: <span style="color:var(--green)">Searching for apprenticeship</span>
+        </div>
+        <div style="margin-top:10px"><span class="term-prompt">tfourier@esupec</span><span class="term-cmd">:~$</span> <span class="term-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="apropos">
+  <div class="sec-inner">
+    <div class="eyebrow">whoami</div>
+    <h2 class="sec-title">Qui suis-je</h2>
+    <p class="sec-sub">Rigoureux et curieux, je cherche à comprendre le fonctionnement profond des infrastructures plutôt que de m'arrêter à leur surface.</p>
+
+    <div class="ap-grid">
+      <div class="ap-text">
+        <p>Actuellement en première année de <strong>BTS SIO option SISR</strong> (Solutions d'Infrastructure, Systèmes et Réseaux) à l'Ésupec — Lycée Sainte-Marie de Cholet, je me forme à la gestion, la sécurisation et l'évolution des infrastructures informatiques professionnelles.</p>
+        <p>Mon stage chez <strong>LOXYS Solutions Informatiques</strong> m'a permis de passer de la théorie à la pratique : support client terrain, déploiement réseau événementiel, et la conception complète d'un système de supervision intégrant l'intelligence artificielle.</p>
+        <div class="info-list">
+          <div class="info-row"><div class="ic">📍</div>Saint-Malo-du-Bois, Vendée</div>
+          <div class="info-row"><div class="ic">📧</div>fouriertiago@gmail.com</div>
+          <div class="info-row"><div class="ic">🚗</div>Permis B — Véhiculé</div>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="tl-item now">
+          <div class="tl-date">Mai – Juin 2026</div>
+          <div class="tl-title">Stage — LOXYS Solutions Informatiques</div>
+          <div class="tl-sub">Monitoring IA, portail captif, déploiement événementiel</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2025 → 2027</div>
+          <div class="tl-title">BTS SIO — option SISR</div>
+          <div class="tl-sub">Ésupec — Lycée Sainte-Marie, Cholet</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2022 → 2025</div>
+          <div class="tl-title">Bac STI2D — Mention Assez Bien</div>
+          <div class="tl-sub">Saint Gab · Projet : panneau solaire asservi en position</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="competences">
+  <div class="sec-inner">
+    <div class="eyebrow">stack --list</div>
+    <h2 class="sec-title">Compétences techniques</h2>
+    <p class="sec-sub">Un socle réseau solide, enrichi de compétences en développement et en intégration IA.</p>
+
+    <div class="skill-grid">
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">🌐</span><span class="skill-title">Réseaux & Sécurité</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">OPNsense</span><span class="skill-tag">VLANs 802.1Q</span>
+          <span class="skill-tag">DHCP/DNS</span><span class="skill-tag">UniFi</span>
+          <span class="skill-tag">Firewall</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">🐧</span><span class="skill-title">Systèmes</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">Linux (Deb/Ubuntu)</span><span class="skill-tag">Windows Server</span>
+          <span class="skill-tag">SSH</span><span class="skill-tag">systemd</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">📊</span><span class="skill-title">Supervision</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">Zabbix 7.0</span><span class="skill-tag">Triggers</span>
+          <span class="skill-tag">Webhooks</span><span class="skill-tag">Alerting</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">🐳</span><span class="skill-title">Virtualisation & DevOps</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">Docker Compose</span><span class="skill-tag">Proxmox VE</span>
+          <span class="skill-tag">Git</span><span class="skill-tag">Bash</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">💻</span><span class="skill-title">Développement</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">Python / Flask</span><span class="skill-tag">PHP</span>
+          <span class="skill-tag">JavaScript</span><span class="skill-tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-head"><span class="skill-ic">🤖</span><span class="skill-title">IA & Automatisation</span></div>
+        <div class="skill-tags">
+          <span class="skill-tag">Flowise</span><span class="skill-tag">Groq LLM</span>
+          <span class="skill-tag">API REST</span><span class="skill-tag">AIOps</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stage">
+  <div class="sec-inner">
+    <div class="eyebrow">cat /var/log/stage.log</div>
+    <h2 class="sec-title">LOXYS Solutions Informatiques</h2>
+    <p class="sec-sub">6 semaines de stage — société IT vendéenne, 130 clients professionnels, 5 collaborateurs. Clique sur une mission pour voir le détail complet.</p>
+
+    <div class="mission-grid">
+      <div class="mcard" data-modal="m1">
+        <div class="mcard-bar"><span class="mcard-num">mission_01.sh</span><span class="mcard-expand">ouvrir →</span></div>
+        <div class="mcard-body">
+          <div class="mcard-title">Support Client & Maintenance</div>
+          <div class="mcard-desc">Interventions terrain quotidiennes sur le parc informatique des clients : dépannage, sécurité, déploiement logiciel.</div>
+          <div class="mcard-tags"><span class="mcard-tag">Windows/Linux</span><span class="mcard-tag">Sécurité</span><span class="mcard-tag">Support</span></div>
+        </div>
+      </div>
+      <div class="mcard" data-modal="m2">
+        <div class="mcard-bar"><span class="mcard-num">mission_02.sh</span><span class="mcard-expand">ouvrir →</span></div>
+        <div class="mcard-body">
+          <div class="mcard-title">Festival de Poupet</div>
+          <div class="mcard-desc">Déploiement réseau événementiel complet : baies, fibre, bornes WiFi, segmentation VLANs.</div>
+          <div class="mcard-tags"><span class="mcard-tag">VLANs</span><span class="mcard-tag">UniFi</span><span class="mcard-tag">Événementiel</span></div>
+        </div>
+      </div>
+      <div class="mcard" data-modal="m3">
+        <div class="mcard-bar"><span class="mcard-num">mission_03.sh</span><span class="mcard-expand">ouvrir →</span></div>
+        <div class="mcard-body">
+          <div class="mcard-title">Projet : Supervision par IA</div>
+          <div class="mcard-desc">Infrastructure complète associant pare-feu, supervision Zabbix et diagnostic automatisé par agent IA.</div>
+          <div class="mcard-tags"><span class="mcard-tag">OPNsense</span><span class="mcard-tag">Zabbix</span><span class="mcard-tag">Flowise</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projet">
+  <div class="sec-inner">
+    <div class="eyebrow">./run-pipeline.sh</div>
+    <h2 class="sec-title">Système de monitoring intelligent</h2>
+    <p class="sec-sub">Détection d'anomalie réseau, diagnostic automatique par IA, et alerte enrichie envoyée par email — sans intervention humaine.</p>
+
+    <div class="flow-list">
+      <div class="flow-row"><div class="flow-n">01</div><div><div class="flow-t">Détection Zabbix</div><div class="flow-d">CPU &gt; 90% pendant 5 min sur un serveur supervisé</div></div></div>
+      <div class="flow-row"><div class="flow-n">02</div><div><div class="flow-t">Webhook déclenché</div><div class="flow-d">Script JS appelle l'API Flowise automatiquement</div></div></div>
+      <div class="flow-row"><div class="flow-n">03</div><div><div class="flow-t">Agent IA collecte les métriques</div><div class="flow-d">Appel d'un outil custom interrogeant une API Python de monitoring</div></div></div>
+      <div class="flow-row"><div class="flow-n">04</div><div><div class="flow-t">Diagnostic SSH approfondi</div><div class="flow-d">Connexion sécurisée et restreinte pour analyser les processus réels</div></div></div>
+      <div class="flow-row"><div class="flow-n">05</div><div><div class="flow-t">Email enrichi envoyé</div><div class="flow-d">Mail HTML avec diagnostic IA, causes alternatives et marche à suivre</div></div></div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:48px">stack technique</div>
+    <div class="stack-grid">
+      <div class="stack-card"><div class="stack-ic">🔥</div><div class="stack-name">OPNsense</div><div class="stack-role">pare-feu</div></div>
+      <div class="stack-card"><div class="stack-ic">📊</div><div class="stack-name">Zabbix 7.0</div><div class="stack-role">supervision</div></div>
+      <div class="stack-card"><div class="stack-ic">🤖</div><div class="stack-name">Flowise</div><div class="stack-role">agent IA</div></div>
+      <div class="stack-card"><div class="stack-ic">⚡</div><div class="stack-name">Groq</div><div class="stack-role">llama-3.3-70b</div></div>
+      <div class="stack-card"><div class="stack-ic">🐍</div><div class="stack-name">Flask</div><div class="stack-role">API & mail</div></div>
+      <div class="stack-card"><div class="stack-ic">🐳</div><div class="stack-name">Docker</div><div class="stack-role">conteneurs</div></div>
+      <div class="stack-card"><div class="stack-ic">🔐</div><div class="stack-name">SSH Ed25519</div><div class="stack-role">accès restreint</div></div>
+      <div class="stack-card"><div class="stack-ic">📧</div><div class="stack-name">SMTP Gmail</div><div class="stack-role">alertes HTML</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="veille">
+  <div class="sec-inner">
+    <div class="eyebrow">tail -f veille.log</div>
+    <h2 class="sec-title">Veille technologique</h2>
+    <p class="sec-sub">Suivi méthodique des évolutions du secteur, conformément aux exigences de l'épreuve E4.</p>
+
+    <div class="veille-grid">
+      <div class="vcard">
+        <div class="vcard-date">Juin 2026</div>
+        <div class="vcard-title">L'IA appliquée au monitoring (AIOps)</div>
+        <div class="vcard-desc">Analyse des technologies combinant métriques de supervision et modèles prédictifs pour anticiper pannes et surcharges, avec mise en pratique sur Zabbix + Flowise.</div>
+        <div class="vcard-tags"><span class="vcard-tag">AIOps</span><span class="vcard-tag">LLM</span><span class="vcard-tag">Zabbix</span></div>
+      </div>
+      <div class="vcard">
+        <div class="vcard-date">Juin 2026</div>
+        <div class="vcard-title">Sécurité WiFi : la transition WPA3-Enterprise</div>
+        <div class="vcard-desc">Étude de la transition globale vers WPA3 et de l'implémentation de serveurs RADIUS renforcés face aux vulnérabilités historiques du WPA2.</div>
+        <div class="vcard-tags"><span class="vcard-tag">WPA3</span><span class="vcard-tag">RADIUS</span><span class="vcard-tag">Sécurité WiFi</span></div>
+      </div>
+      <div class="vcard">
+        <div class="vcard-date">Mai 2026</div>
+        <div class="vcard-title">Conformité RGPD des portails captifs</div>
+        <div class="vcard-desc">Exigences légales pour la collecte de données via WiFi public en entreprise : consentement, droit à l'oubli, durée de conservation.</div>
+        <div class="vcard-tags"><span class="vcard-tag">RGPD</span><span class="vcard-tag">Portail captif</span></div>
+      </div>
+      <div class="vcard">
+        <div class="vcard-date">Mai 2026</div>
+        <div class="vcard-title">Conteneurisation des services IT</div>
+        <div class="vcard-desc">Avantages de Docker Compose pour isoler des services critiques (supervision, base de données) avec volumes persistants et redémarrage automatique.</div>
+        <div class="vcard-tags"><span class="vcard-tag">Docker</span><span class="vcard-tag">DevOps</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="sec-inner">
+    <div class="eyebrow" style="justify-content:center">ssh contact@fourier-tiago</div>
+    <h2 class="sec-title">Travaillons ensemble</h2>
+    <p class="sec-sub" style="margin:0 auto">Disponible pour une alternance à partir de septembre 2026. N'hésitez pas à me contacter.</p>
+    <div class="hero-btns" style="justify-content:center;margin-top:32px">
+      <a href="mailto:fouriertiago@gmail.com" class="btn-fill">📧 fouriertiago@gmail.com</a>
+      <a href="#" class="btn-ghost">📄 Télécharger mon CV</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">Tiago Fourier</div>
+  <div class="footer-sub">BTS SIO SISR — Ésupec Cholet — Promotion 2025/2027</div>
+  <div class="footer-links">
+    <a href="mailto:fouriertiago@gmail.com">Email</a>
+    <a href="#">GitHub</a>
+    <a href="#">LinkedIn</a>
+  </div>
+  <div class="footer-copy">© 2026 Tiago Fourier — Portfolio BTS SIO SISR</div>
+</footer>
+
+<div class="modal-overlay" id="modal-m1">
+  <div class="modal">
+    <div class="modal-bar">
+      <div class="modal-bar-left">
+        <div class="term-dot" style="background:#FF5F57;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#FEBC2E;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#28C840;width:9px;height:9px"></div>
+        <span class="modal-bar-title">mission_01.sh</span>
+      </div>
+      <button class="modal-close" data-close>✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" data-tab="ctx">Contexte</button>
+      <button class="mtab" data-tab="real">Réalisations</button>
+      <button class="mtab" data-tab="stack">Stack</button>
+    </div>
+    <div class="modal-content">
+      <div class="modal-title">Support Client & Maintenance Terrain</div>
+      <div class="modal-sub">LOXYS Solutions Informatiques · Mai 2026</div>
+
+      <div class="mpane active" data-pane="ctx">
+        <p>Interventions quotidiennes en autonomie ou en binôme pour résoudre les incidents du parc informatique de plus de 130 clients professionnels de LOXYS, allant du diagnostic matériel à la sécurisation des postes.</p>
+        <p>Deux cas représentatifs : un poste client infecté par un <strong style="color:var(--txt)">scareware</strong> imitant une alerte Windows Defender, et l'installation complète d'un système de vidéosurveillance IP pour un client professionnel.</p>
+      </div>
+
+      <div class="mpane" data-pane="real">
+        <ul>
+          <li><strong style="color:var(--txt)">Diagnostic matériel</strong> — remplacement de composants défectueux (SSD, RAM, alimentations)</li>
+          <li><strong style="color:var(--txt)">Sécurité des postes</strong> — identification et nettoyage de scarewares / malwares via PowerShell</li>
+          <li><strong style="color:var(--txt)">Déploiement logiciel</strong> — installation Office 365, configuration sauvegardes et accès distants</li>
+          <li><strong style="color:var(--txt)">Vidéosurveillance</strong> — câblage PoE, configuration NVR, accès mobile à distance</li>
+          <li><strong style="color:var(--txt)">Suivi</strong> — gestion des tickets clients et formation des utilisateurs</li>
+        </ul>
+      </div>
+
+      <div class="mpane" data-pane="stack">
+        <p>Environnements et outils mobilisés sur cette mission :</p>
+        <div class="mtagrow">
+          <span class="mtag">Windows 10/11</span><span class="mtag">PowerShell</span>
+          <span class="mtag">Office 365</span><span class="mtag">Caméras IP / NVR</span>
+          <span class="mtag">Diagnostic matériel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-m2">
+  <div class="modal">
+    <div class="modal-bar">
+      <div class="modal-bar-left">
+        <div class="term-dot" style="background:#FF5F57;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#FEBC2E;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#28C840;width:9px;height:9px"></div>
+        <span class="modal-bar-title">mission_02.sh</span>
+      </div>
+      <button class="modal-close" data-close>✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" data-tab="ctx">Contexte</button>
+      <button class="mtab" data-tab="real">Réalisations</button>
+      <button class="mtab" data-tab="stack">Stack</button>
+    </div>
+    <div class="modal-content">
+      <div class="modal-title">Déploiement Réseau Événementiel</div>
+      <div class="modal-sub">Festival de Poupet · Vendée</div>
+
+      <div class="mpane active" data-pane="ctx">
+        <p>LOXYS était responsable de toute l'infrastructure réseau temporaire du Festival de Poupet, événement musical en plein air. L'objectif : assurer la connectivité de la régie, des artistes et du grand public, dans un environnement physique contraint et sous délai serré avant l'ouverture.</p>
+      </div>
+
+      <div class="mpane" data-pane="real">
+        <ul>
+          <li><strong style="color:var(--txt)">Architecture physique</strong> — brassage des baies informatiques itinérantes et tirage de câbles/fibres optiques</li>
+          <li><strong style="color:var(--txt)">Configuration WiFi</strong> — déploiement et positionnement des bornes UniFi selon une carte de couverture précise</li>
+          <li><strong style="color:var(--txt)">Segmentation réseau</strong> — création de VLANs dédiés : Public, Artistes, Régie/Écrans</li>
+          <li><strong style="color:var(--txt)">Vérification</strong> — tests de connectivité fibre et validation de bout en bout avant ouverture</li>
+        </ul>
+      </div>
+
+      <div class="mpane" data-pane="stack">
+        <p>Environnements et outils mobilisés sur cette mission :</p>
+        <div class="mtagrow">
+          <span class="mtag">VLANs 802.1Q</span><span class="mtag">UniFi Controller</span>
+          <span class="mtag">Fibre optique</span><span class="mtag">Baies de brassage</span>
+          <span class="mtag">Réseau événementiel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-m3">
+  <div class="modal">
+    <div class="modal-bar">
+      <div class="modal-bar-left">
+        <div class="term-dot" style="background:#FF5F57;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#FEBC2E;width:9px;height:9px"></div>
+        <div class="term-dot" style="background:#28C840;width:9px;height:9px"></div>
+        <span class="modal-bar-title">mission_03.sh</span>
+      </div>
+      <button class="modal-close" data-close>✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" data-tab="ctx">Contexte</button>
+      <button class="mtab" data-tab="real">Réalisations</button>
+      <button class="mtab" data-tab="code">Code</button>
+      <button class="mtab" data-tab="stack">Stack</button>
+    </div>
+    <div class="modal-content">
+      <div class="modal-title">Projet : Supervision par IA</div>
+      <div class="modal-sub">Conception complète · 192.168.1.0/24</div>
+
+      <div class="mpane active" data-pane="ctx">
+        <p>Conception d'une infrastructure moderne associant routage sécurisé, supervision système et diagnostic automatisé par IA, déployée sur deux serveurs Ubuntu Server avec OPNsense comme pare-feu.</p>
+        <p>L'objectif : transformer une supervision passive (juste des alertes) en un système actif capable d'analyser automatiquement la cause d'un problème et de proposer une marche à suivre concrète.</p>
+      </div>
+
+      <div class="mpane" data-pane="real">
+        <ul>
+          <li><strong style="color:var(--txt)">Pare-feu & portail captif</strong> — OPNsense avec gestion d'un portail captif WiFi conforme RGPD</li>
+          <li><strong style="color:var(--txt)">Supervision centrale</strong> — Zabbix 7.0 sous Docker Compose monitorant CPU, RAM, disque, réseau</li>
+          <li><strong style="color:var(--txt)">Agent IA</strong> — Flowise + Groq (llama-3.3-70b) avec deux outils custom : métriques live et diagnostic SSH restreint</li>
+          <li><strong style="color:var(--txt)">Automatisation complète</strong> — webhook Zabbix → analyse IA → email HTML avec diagnostic et marche à suivre</li>
+          <li><strong style="color:var(--txt)">Sécurité SSH</strong> — compte dédié sans droits sudo, clé Ed25519, commande forcée en lecture seule</li>
+        </ul>
+      </div>
+
+      <div class="mpane" data-pane="code">
+        <p>Extrait du relais mail Python — envoi des alertes enrichies via SMTP :</p>
+        <code class="block"><span class="c"># mail_relay.py — service Flask sur le serveur de supervision</span>
+<span class="k">from</span> flask <span class="k">import</span> Flask, request, jsonify
+<span class="k">import</span> smtplib
+<span class="k">from</span> email.mime.multipart <span class="k">import</span> MIMEMultipart
+
+app = Flask(__name__)
+
+<span class="c">@app.route('/send-alert', methods=['POST'])</span>
+<span class="k">def</span> send_alert():
+    data = request.json
+    <span class="c"># construit le mail HTML aux couleurs LOXYS</span>
+    <span class="c"># avec le diagnostic généré par l'agent IA</span>
+    server = smtplib.SMTP(<span class="s">'smtp.gmail.com'</span>, 587)
+    server.starttls()
+    server.login(SMTP_USER, SMTP_PASSWORD)
+    server.send_message(msg)
+    <span class="k">return</span> jsonify({<span class="s">'status'</span>: <span class="s">'ok'</span>}), 200</code>
+      </div>
+
+      <div class="mpane" data-pane="stack">
+        <p>Environnements et outils mobilisés sur ce projet :</p>
+        <div class="mtagrow">
+          <span class="mtag">OPNsense</span><span class="mtag">Zabbix 7.0</span>
+          <span class="mtag">Docker Compose</span><span class="mtag">Flowise</span>
+          <span class="mtag">Groq LLM</span><span class="mtag">Python / Flask</span>
+          <span class="mtag">SSH Ed25519</span><span class="mtag">SMTP Gmail</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.mcard').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('data-modal');
+      document.getElementById('modal-' + id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.addEventListener('click', closeModals);
+  });
+  document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) closeModals(); });
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals(); });
+  function closeModals(){
+    document.querySelectorAll('.modal-overlay').forEach(o => o.classList.remove('open'));
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.querySelectorAll('.mtab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+        modal.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+        modal.querySelectorAll('.mpane').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        modal.querySelector(`.mpane[data-pane="${target}"]`).classList.add('active');
+      });
+    });
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+  }, {threshold:.1});
+  document.querySelectorAll('.skill-card,.mcard,.stack-card,.vcard,.tl-item').forEach(el=>{
+    el.style.opacity='0'; el.style.transform='translateY(16px)';
+    el.style.transition='opacity .5s ease,transform .5s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>
