@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serveur de téléphonie IP Wazo — Tiago Fourier</title>
+<meta name="description" content="Installer pour LOXYS un serveur de téléphonie sur IP (IPBX) Wazo Platform sur une machine virtuelle Debian 12, le vérifier avec des softphones et le rattacher à la supervision Zabbix.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E5</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Serveur de téléphonie IP Wazo</div>
+<div class="peyebrow">Alternance — LOXYS Solutions Informatiques</div>
+<h1 class="ptitle">Serveur de téléphonie IP Wazo</h1>
+<p class="plead">Installer pour LOXYS un serveur de téléphonie sur IP (IPBX) Wazo Platform sur une machine virtuelle Debian 12, le vérifier avec des softphones et le rattacher à la supervision Zabbix.</p>
+<div class="meta"><span class="chip"><b>Période</b>Octobre 2026</span><span class="chip"><b>Cadre</b>Alternance</span><span class="chip"><b>Environnement</b>Debian 12 sur VMware</span></div>
+<div class="toc"><a href="#contexte">Contexte</a><a href="#realisation">Réalisation</a><a href="#tests">Tests</a><a href="#supervision">Supervision</a><a href="#suite">Piste étudiée</a><a href="#competences">Compétences E5</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte</h2>
+<p>Dans le cadre de mon alternance chez LOXYS, j'ai monté un serveur de téléphonie sur IP avec <strong>Wazo Platform</strong>, une solution open source qui joue le rôle d'autocommutateur (IPBX) : elle gère les comptes, les numéros internes et les appels entre postes et softphones.</p>
+</section><section class="block" id="realisation"><h2>Réalisation</h2>
+<ol>
+<li><strong>Machine virtuelle</strong> — création d'une VM Debian 12 sur l'infrastructure VMware de LOXYS.</li>
+<li><strong>Installation</strong> — déploiement de Wazo Platform avec <code>wazo-ansible</code>, l'installation automatisée par playbooks Ansible.</li>
+<li><strong>Configuration</strong> — création d'un contexte interne avec la plage de numéros 1000 à 1099, et d'utilisateurs de test.</li>
+</ol>
+</section><section class="block" id="tests"><h2>Tests</h2>
+<p>Les utilisateurs de test ont été configurés sur trois softphones différents : <strong>MicroSIP</strong>, <strong>Linphone</strong> et <strong>Zoiper</strong>, pour vérifier que le serveur fonctionne avec plusieurs clients.</p>
+</section><section class="block" id="supervision"><h2>Supervision</h2>
+<p>J'ai installé l'<strong>agent Zabbix</strong> (version 7.4) sur la VM, pour que le serveur de téléphonie soit suivi par la supervision, comme les autres serveurs.</p>
+</section><section class="block" id="suite"><h2>Piste étudiée</h2>
+<p>Je m'intéresse au mode <strong>multi-tenant</strong> de Wazo, qui permettrait de gérer plusieurs clients isolés les uns des autres sur une même plateforme.</p>
+</section>
+<section class="block" id="competences"><h2>Compétences mobilisées (bloc 1, épreuve E5)</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer un IPBX Wazo Platform sur une machine virtuelle Debian 12 avec wazo-ansible. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Vérifier le service avec des comptes de test sur trois softphones. <a href="#tests">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">1.4</span><div class="comp-txt"><b>Vérifier les conditions de la continuité d&#x27;un service informatique</b>Installer l&#x27;agent Zabbix sur la machine pour superviser le serveur. <a href="#supervision">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E5</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><p class="note">Preuves en cours d'ajout.</p></section>
+<div class="pager"><a href="stage-evenementiel.html">← Déploiement réseau événementiel</a><a href="axesy-multisite.html">Plateforme web multi-site sécurisée (Axesy) →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

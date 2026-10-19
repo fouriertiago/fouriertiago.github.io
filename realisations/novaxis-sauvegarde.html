@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) — Tiago Fourier</title>
-<meta name="description" content="Sauvegarder chaque nuit le site web et la base de données d&#x27;une entreprise vers un serveur externe, automatiquement et par une liaison SSH chiffrée, et pouvoir tout restaurer après une panne.">
+<meta name="description" content="Sauvegarder chaque jour, hors des heures de travail, le site web et la base de données d&#x27;une entreprise vers un serveur externe par SSH, et pouvoir tout restaurer après une perte ou une panne.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/page.css">
 </head>
@@ -22,7 +22,7 @@
 <div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis)</div>
 <div class="peyebrow">Formation 2e année — Séquence sauvegardes</div>
 <h1 class="ptitle">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis)</h1>
-<p class="plead">Sauvegarder chaque nuit le site web et la base de données d&#x27;une entreprise vers un serveur externe, automatiquement et par une liaison SSH chiffrée, et pouvoir tout restaurer après une panne.</p>
+<p class="plead">Sauvegarder chaque jour, hors des heures de travail, le site web et la base de données d&#x27;une entreprise vers un serveur externe par SSH, et pouvoir tout restaurer après une perte ou une panne.</p>
 <div class="meta"><span class="chip"><b>Date</b>06/10/2026</span><span class="chip"><b>Cadre</b>Cours SISR 2e année</span><span class="chip"><b>Environnement</b>Linux, MySQL</span><span class="chip status">Mise en œuvre en TP en cours</span></div>
 <div class="toc"><a href="#contexte">Contexte et demande</a><a href="#exigences">Exigences</a><a href="#solution">Solution retenue</a><a href="#evolutions">Évolutions identifiées</a><a href="#competences">Compétences E5</a><a href="#preuves">Preuves</a></div>
 </div></header>
@@ -31,27 +31,37 @@
 <p>L'entreprise Novaxis veut sauvegarder automatiquement son site web et sa base <strong>« overdata »</strong> vers un serveur externe, pour pouvoir restaurer les données après une perte ou un crash, sans gêner les employés qui utilisent le site toute la journée.</p>
 </section><section class="block" id="exigences"><h2>Exigences</h2>
 <div class="tw"><table><tr><th>Exigence</th><th>Réponse</th></tr>
-<tr><td>Disponibilité</td><td>Sauvegarde la nuit, sans interruption du site</td></tr>
-<tr><td>Continuité</td><td>Restauration rapide, au plus une journée de données perdue</td></tr>
-<tr><td>Fiabilité</td><td>Sauvegarde quotidienne et restauration testée</td></tr>
-<tr><td>Intégrité</td><td>Fichier <code>.sql</code> complet, identique à la source</td></tr>
-<tr><td>Automatisation</td><td>Aucune action manuelle des employés</td></tr></table></div>
+<tr><td>Disponibilité</td><td>Le site reste accessible : sauvegarde hors des heures de travail</td></tr>
+<tr><td>Continuité</td><td>Restauration rapide, une journée de données perdue au maximum</td></tr>
+<tr><td>Fiabilité</td><td>Sauvegarde automatique et restauration testée</td></tr>
+<tr><td>Simplicité</td><td>Aucune action demandée aux employés</td></tr></table></div>
+<h3>Exigences de sécurité</h3>
+<ul>
+<li>Envoi sécurisé des sauvegardes vers le serveur externe, par SSH.</li>
+<li>Accès au serveur de sauvegarde réservé à l'administrateur.</li>
+<li>Sauvegardes consultables uniquement par les personnes autorisées.</li>
+</ul>
 </section><section class="block" id="solution"><h2>Solution retenue</h2>
 <ul>
-<li><strong>Sauvegarde</strong> — un script lancé par <code>cron</code> chaque jour à 22 h 30 exporte la base avec <code>mysqldump</code> et copie le site.</li>
-<li><strong>Transfert</strong> — envoi par <code>scp</code> vers un serveur de sauvegarde externe, avec une clé SSH, sans mot de passe ni accès root.</li>
-<li><strong>Sécurité</strong> — utilisateur dédié, dossier de sauvegarde à droits restreints, mot de passe MySQL stocké dans <code>.my.cnf</code> en droits 600 et non dans la commande.</li>
-<li><strong>Conservation</strong> — plusieurs jours de sauvegardes gardés sur le serveur externe, pour revenir en arrière après une erreur humaine.</li>
-<li><strong>Restauration</strong> — réimport du fichier <code>.sql</code> avec <code>mysql</code>.</li>
+<li><strong>Sauvegarde</strong> — un script lance chaque jour, hors des heures de travail, la sauvegarde de la base « overdata » et du site web.</li>
+<li><strong>Transfert</strong> — les sauvegardes partent automatiquement vers un serveur externe, par SSH.</li>
+<li><strong>Conservation</strong> — plusieurs jours de sauvegardes sont gardés sur ce serveur, pour pouvoir revenir en arrière après une erreur humaine.</li>
+<li><strong>Restauration</strong> — récupération de la dernière sauvegarde sur le serveur externe, puis remise en place de la base et du site.</li>
 </ul>
-<h3>Pourquoi ces choix</h3>
-<p>Ce sont des outils natifs de Linux, gratuits et maîtrisés ; la sauvegarde de nuit n'a aucun impact sur les employés ; le serveur externe protège les données en cas de panne du serveur principal.</p>
+<p>Pour la mise en œuvre en TP, les outils vus en cours sont <code>mysqldump</code> et <code>mysql</code> pour exporter et réimporter la base, <code>scp</code> avec une authentification par clé SSH pour le transfert, et un script shell planifié avec <code>crontab</code>.</p>
+<h3>Argumentaire</h3>
+<ul>
+<li>Solution simple, avec des outils vus en cours (script, SSH).</li>
+<li>Aucune gêne pour les employés : la sauvegarde est automatique et se fait hors des heures de travail.</li>
+<li>Les données sont aussi sur un serveur externe : elles survivent à une panne du serveur principal.</li>
+<li>Plusieurs sauvegardes conservées : retour en arrière possible après une erreur humaine.</li>
+<li>Restauration simple à tester.</li>
+</ul>
 </section><section class="block" id="evolutions"><h2>Évolutions identifiées</h2>
 <ul>
-<li>Recevoir une alerte e-mail si une sauvegarde échoue.</li>
+<li>Recevoir une alerte par e-mail si une sauvegarde échoue.</li>
 <li>Copier les sauvegardes sur un deuxième serveur externe.</li>
-<li>Doubler le serveur web pour améliorer la disponibilité (argumenté avec les niveaux de disponibilité, de 90 % à 99,9999 %).</li>
-<li>Chiffrer les fichiers de sauvegarde stockés.</li>
+<li>Doubler le serveur web pour améliorer la disponibilité (argumenté avec le tableau des niveaux de disponibilité).</li>
 </ul>
 </section>
 <section class="block" id="competences"><h2>Compétences mobilisées (bloc 1, épreuve E5)</h2>

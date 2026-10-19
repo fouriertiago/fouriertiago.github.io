@@ -32,39 +32,42 @@
 <ul>
 <li><strong>Acteurs</strong> — le directeur, le chef de projet et deux techniciens.</li>
 <li><strong>Exigences</strong> — un seul serveur pour les deux sites ; chaque site accessible par son propre nom.</li>
-<li><strong>Sécurité</strong> — authentification par mot de passe ; le site projet est réservé au directeur et au chef de projet.</li>
+<li><strong>Sécurité</strong> — authentification par mot de passe pour accéder aux URL ; le site projet n'est ouvert qu'à deux utilisateurs, le site réalisation à quatre.</li>
 </ul>
 </section><section class="block" id="choix"><h2>Choix techniques</h2>
 <ul>
-<li><strong>Debian 12</strong> — système libre, gratuit et adapté à l'hébergement web.</li>
+<li><strong>Linux (Debian 12)</strong> — un système libre et peu coûteux, plus sécurisé que Windows pour héberger des applications web.</li>
 <li><strong>Apache2 et VirtualHosts</strong> — deux sites sur un seul serveur.</li>
 <li><strong>Authentification Basic</strong> — un fichier <code>.htpasswd</code> par site pour attribuer des droits différents.</li>
 <li><strong>Bind9</strong> — un serveur DNS pour accéder aux sites par leur nom plutôt que par leur adresse IP.</li>
 </ul>
 </section><section class="block" id="realisation"><h2>Réalisation</h2>
 <ol>
-<li>Configuration des dépôts, mise à jour et installation d'Apache2.</li>
-<li>Création des dossiers <code>/var/www/html/projet</code> et <code>/var/www/html/realisation</code> avec leur page d'accueil.</li>
-<li>Un fichier de configuration par site, copié depuis <code>000-default.conf</code>, puis activation avec <code>a2ensite</code>.</li>
-<li>Fichiers de mots de passe : le site projet pour le directeur et le chef de projet ; le site réalisation pour l'ensemble de l'équipe.</li>
-<li>Serveur DNS Bind9 : une zone par domaine (<code>db.projet.local</code>, <code>db.realisation.local</code>), redémarrage et vérification du service.</li>
-<li>Configuration du client pour utiliser ce DNS.</li>
+<li>Installation d'Apache2 (<code>apt install apache2</code>).</li>
+<li>Création des dossiers <code>/var/www/html/projet</code> et <code>/var/www/html/realisation</code>, chacun avec sa page d'accueil.</li>
+<li>Un VirtualHost par site (<code>projet.conf</code>, <code>realisation.conf</code>) : nom de domaine, dossier du site et authentification Basic avec <code>require valid-user</code>.</li>
+<li>Fichiers de mots de passe créés avec <code>htpasswd</code> : deux comptes pour le site projet, quatre pour le site réalisation ; vérification que les mots de passe sont bien stockés hachés et non en clair.</li>
+<li>Activation des sites avec <code>a2ensite</code> et redémarrage d'Apache.</li>
+<li>Serveur DNS Bind9 sur une deuxième machine en adresse IP statique : déclaration des zones dans <code>named.conf.local</code>, une zone directe par domaine, redémarrage et vérification du service.</li>
+<li>Configuration du client (<code>resolv.conf</code>) pour qu'il utilise ce DNS.</li>
 </ol>
 </section><section class="block" id="recette"><h2>Plan de recette</h2>
 <p>J'ai rédigé un plan de recette de 10 tests, depuis un client Debian 12 avec Firefox :</p>
 <ul>
-<li>8 tests d'accès : chaque utilisateur sur chaque site, pour vérifier qu'il est accepté ou refusé selon ses droits ;</li>
+<li>8 tests d'accès : chaque utilisateur sur chaque site, avec son identifiant et son mot de passe ;</li>
 <li>2 tests de résolution de noms avec <code>nslookup</code>.</li>
 </ul>
+<p>Les captures jointes montrent la demande d'authentification, l'affichage des deux sites et la résolution des deux noms par le serveur DNS.</p>
 </section><section class="block" id="evolutions"><h2>Évolutions identifiées</h2>
 <ul>
-<li><strong>HTTPS</strong> — l'authentification Basic transmet les mots de passe en clair sur HTTP.</li>
-<li><strong>Disponibilité</strong> — redondance sur au moins deux serveurs, répartition de charge, RAID avec disque de secours.</li>
+<li><strong>Cluster de serveurs</strong> — redondance et bascule (failover) avec réplication sur au moins deux serveurs.</li>
+<li><strong>Répartition de charge</strong> entre ces serveurs.</li>
 <li><strong>Exploitation</strong> — supervision et sauvegardes.</li>
+<li><strong>Disques</strong> — RAID avec disque de secours (spare).</li>
 </ul>
 </section>
 <section class="block" id="competences"><h2>Compétences mobilisées (bloc 1, épreuve E5)</h2>
-<div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Réserver chaque site aux bons utilisateurs grâce à un fichier de mots de passe par site. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Rédiger et dérouler un plan de recette en 10 tests. <a href="#recette">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer Apache2, les VirtualHosts et le DNS Bind9. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Réserver chaque site aux bons utilisateurs grâce à un fichier de mots de passe par site. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Rédiger un plan de recette en 10 tests et vérifier les accès et la résolution DNS. <a href="#recette">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer Apache2, les VirtualHosts et le DNS Bind9. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
 <p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E5</a>.</p></section>
 <section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
 <figure><a href="../preuves/axesy/vhost-projet.png" target="_blank" rel="noopener"><img src="../preuves/axesy/vhost-projet.png" alt="VirtualHost du site projet : nom de domaine, dossier et authentification Basic" loading="lazy"></a><figcaption>VirtualHost du site projet : nom de domaine, dossier et authentification Basic</figcaption></figure>
@@ -82,7 +85,7 @@
 <div class="doc"><span>Plan de recette en 10 tests</span><a href="../preuves/axesy/plan-de-recette.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
 </div>
 <p class="note">Environnement de TP : comptes et adresses IP fictifs.</p></section>
-<div class="pager"><a href="stage-evenementiel.html">← Déploiement réseau événementiel</a><a href="novaxis-sauvegarde.html">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) →</a></div>
+<div class="pager"><a href="alternance-wazo.html">← Serveur de téléphonie IP Wazo</a><a href="novaxis-sauvegarde.html">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) →</a></div>
 </main>
 <footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
 </body>
