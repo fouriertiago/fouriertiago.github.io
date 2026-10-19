@@ -14,7 +14,7 @@
   <ul class="pnav-links">
     <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
     <li><a href="../index.html#realisations">Réalisations</a></li>
-    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../competences.html">Tableau E5</a></li>
     <li><a href="../veille.html">Veille</a></li>
   </ul>
 </nav>
@@ -24,7 +24,7 @@
 <h1 class="ptitle">Plateforme web multi-site sécurisée (Axesy)</h1>
 <p class="plead">Héberger deux sites internes sur un seul serveur Debian, chacun accessible par son nom et protégé par mot de passe, avec des droits différents selon l&#x27;utilisateur.</p>
 <div class="meta"><span class="chip"><b>Date</b>01/10/2026</span><span class="chip"><b>Cadre</b>Évaluation individuelle</span><span class="chip"><b>Environnement</b>Debian 12</span></div>
-<div class="toc"><a href="#contexte">Contexte et demande</a><a href="#choix">Choix techniques</a><a href="#realisation">Réalisation</a><a href="#recette">Plan de recette</a><a href="#evolutions">Évolutions identifiées</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+<div class="toc"><a href="#contexte">Contexte et demande</a><a href="#choix">Choix techniques</a><a href="#realisation">Réalisation</a><a href="#recette">Plan de recette</a><a href="#evolutions">Évolutions identifiées</a><a href="#competences">Compétences E5</a><a href="#preuves">Preuves</a></div>
 </div></header>
 <main class="pbody">
 <section class="block" id="contexte"><h2>Contexte et demande</h2>
@@ -63,10 +63,25 @@
 <li><strong>Exploitation</strong> — supervision et sauvegardes.</li>
 </ul>
 </section>
-<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<section class="block" id="competences"><h2>Compétences mobilisées (bloc 1, épreuve E5)</h2>
 <div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Réserver chaque site aux bons utilisateurs grâce à un fichier de mots de passe par site. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Rédiger et dérouler un plan de recette en 10 tests. <a href="#recette">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer Apache2, les VirtualHosts et le DNS Bind9. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
-<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
-<section class="block" id="preuves"><h2>Preuves</h2><p class="note">Preuves en cours d'ajout.</p></section>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E5</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/axesy/vhost-projet.png" target="_blank" rel="noopener"><img src="../preuves/axesy/vhost-projet.png" alt="VirtualHost du site projet : nom de domaine, dossier et authentification Basic" loading="lazy"></a><figcaption>VirtualHost du site projet : nom de domaine, dossier et authentification Basic</figcaption></figure>
+<figure><a href="../preuves/axesy/vhost-realisation.png" target="_blank" rel="noopener"><img src="../preuves/axesy/vhost-realisation.png" alt="VirtualHost du site réalisation, avec son propre fichier de mots de passe" loading="lazy"></a><figcaption>VirtualHost du site réalisation, avec son propre fichier de mots de passe</figcaption></figure>
+<figure><a href="../preuves/axesy/htpasswd.png" target="_blank" rel="noopener"><img src="../preuves/axesy/htpasswd.png" alt="Fichier de mots de passe : les mots de passe sont stockés hachés, pas en clair" loading="lazy"></a><figcaption>Fichier de mots de passe : les mots de passe sont stockés hachés, pas en clair</figcaption></figure>
+<figure><a href="../preuves/axesy/zones-bind9.png" target="_blank" rel="noopener"><img src="../preuves/axesy/zones-bind9.png" alt="Déclaration des deux zones DNS dans Bind9" loading="lazy"></a><figcaption>Déclaration des deux zones DNS dans Bind9</figcaption></figure>
+<figure><a href="../preuves/axesy/zone-projet.png" target="_blank" rel="noopener"><img src="../preuves/axesy/zone-projet.png" alt="Zone directe projet.local" loading="lazy"></a><figcaption>Zone directe projet.local</figcaption></figure>
+<figure><a href="../preuves/axesy/test-authentification.png" target="_blank" rel="noopener"><img src="../preuves/axesy/test-authentification.png" alt="Recette : le navigateur demande l&#x27;identifiant avant d&#x27;afficher le site projet" loading="lazy"></a><figcaption>Recette : le navigateur demande l&#x27;identifiant avant d&#x27;afficher le site projet</figcaption></figure>
+<figure><a href="../preuves/axesy/test-acces-projet.png" target="_blank" rel="noopener"><img src="../preuves/axesy/test-acces-projet.png" alt="Recette : site projet affiché après authentification" loading="lazy"></a><figcaption>Recette : site projet affiché après authentification</figcaption></figure>
+<figure><a href="../preuves/axesy/test-nslookup.png" target="_blank" rel="noopener"><img src="../preuves/axesy/test-nslookup.png" alt="Recette : résolution de www.projet.local par le serveur DNS" loading="lazy"></a><figcaption>Recette : résolution de www.projet.local par le serveur DNS</figcaption></figure>
+</div>
+<div class="docs">
+<div class="doc"><span>Dossier de choix technique</span><a href="../preuves/axesy/dossier-choix-technique.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+<div class="doc"><span>Documentation technique d&#x27;installation (serveur web et DNS)</span><a href="../preuves/axesy/documentation-technique.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+<div class="doc"><span>Plan de recette en 10 tests</span><a href="../preuves/axesy/plan-de-recette.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+</div>
+<p class="note">Environnement de TP : comptes et adresses IP fictifs.</p></section>
 <div class="pager"><a href="stage-evenementiel.html">← Déploiement réseau événementiel</a><a href="novaxis-sauvegarde.html">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) →</a></div>
 </main>
 <footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
