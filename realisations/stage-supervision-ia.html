@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervision Zabbix et agent IA de diagnostic — Tiago Fourier</title>
+<meta name="description" content="Superviser les serveurs avec Zabbix et confier le premier diagnostic des alertes à un agent IA Flowise, qui envoie à l&#x27;administrateur un e-mail avec la cause probable et la marche à suivre.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Supervision Zabbix et agent IA de diagnostic</div>
+<div class="peyebrow">Stage de 1re année — LOXYS Solutions Informatiques</div>
+<h1 class="ptitle">Supervision Zabbix et agent IA de diagnostic</h1>
+<p class="plead">Superviser les serveurs avec Zabbix et confier le premier diagnostic des alertes à un agent IA Flowise, qui envoie à l&#x27;administrateur un e-mail avec la cause probable et la marche à suivre.</p>
+<div class="meta"><span class="chip"><b>Période</b>01/06/2026 – fin juin 2026</span><span class="chip"><b>Cadre</b>Stage</span><span class="chip"><b>Tuteur</b>Thomas Hulin</span><span class="chip">Projet principal du stage</span></div>
+<div class="toc"><a href="#contexte">Contexte et objectif</a><a href="#etapes">Construction pas à pas</a><a href="#architecture">Architecture</a><a href="#supervision">Supervision du réseau avec Zabbix</a><a href="#habilitations">Habilitations : donner le minimum de droits</a><a href="#deploiement">Déploiement, tests et accompagnement</a><a href="#difficultes">Difficultés et solutions</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte et objectif</h2>
+<p>Une alerte de supervision indique qu'il y a un problème, mais pas pourquoi. L'objectif était d'aller plus loin : quand Zabbix détecte une anomalie, un <strong>agent IA</strong> collecte les vraies données du serveur, analyse la situation et envoie à l'administrateur un <strong>diagnostic avec une marche à suivre</strong>, sans intervention humaine dans la boucle.</p>
+</section><section class="block" id="etapes"><h2>Construction pas à pas</h2>
+<ol>
+<li><strong>01/06 – 05/06</strong> — recherches sur les agents IA, machine virtuelle de test, installation de Flowise pour prendre l'outil en main.</li>
+<li><strong>08/06 – 10/06</strong> — Ubuntu Server installé sur un PC physique relié au réseau ; premier agent capable de lire l'espace disque, la RAM et les températures.</li>
+<li><strong>11/06 – 12/06</strong> — supervision de la base du portail captif par l'agent, puis premier test de Zabbix.</li>
+<li><strong>15/06</strong> — connexion de l'agent Flowise à Zabbix.</li>
+<li><strong>19/06 – 22/06</strong> — e-mail d'alerte contenant l'analyse de l'agent, puis mise en forme pour une lecture rapide.</li>
+<li><strong>23/06</strong> — l'agent utilise désormais les vraies valeurs des serveurs pour un diagnostic précis.</li>
+<li><strong>Fin juin</strong> — nouveaux tests de bout en bout : le journal des actions de Zabbix montre l'alerte envoyée à l'agent (« Sent »).</li>
+</ol>
+</section><section class="block" id="architecture"><h2>Architecture</h2>
+<div class="tw"><table><tr><th>Composant</th><th>Détail</th></tr>
+<tr><td>Serveur Flowise (Ubuntu Server)</td><td>Zabbix 7.0 et Flowise en Docker, API de supervision, relais mail</td></tr>
+<tr><td>Serveur Database (Ubuntu Server)</td><td>Portail captif, base de données, API de supervision</td></tr>
+<tr><td>OPNsense 26.1.10</td><td>Pare-feu supervisé par un agent Zabbix</td></tr>
+<tr><td>Agent IA</td><td>Flowise, Tool Agent avec le modèle llama-3.3-70b (Groq)</td></tr>
+<tr><td>Scripts Python Flask</td><td>Métriques CPU, RAM, disque, température (ports 5000 et 5001), relais e-mail (port 5002)</td></tr></table></div>
+<h3>Chaîne d'alerte</h3>
+<ol>
+<li>L'agent Zabbix détecte un CPU au-dessus de 90 % pendant 5 minutes.</li>
+<li>L'action Zabbix déclenche un webhook (script JavaScript) qui appelle l'API Flowise.</li>
+<li>L'agent IA interroge l'API de métriques, puis se connecte en SSH au serveur concerné.</li>
+<li>Le modèle produit un diagnostic principal, des causes alternatives et une marche à suivre, en français.</li>
+<li>Le relais Flask envoie un e-mail HTML aux couleurs de LOXYS à l'administrateur.</li>
+</ol>
+</section><section class="block" id="supervision"><h2>Supervision du réseau avec Zabbix</h2>
+<ul>
+<li><strong>Serveur Zabbix 7.0</strong> déployé avec Docker Compose (base PostgreSQL 16, interface web sur le port 8080).</li>
+<li><strong>Agents Zabbix</strong> sur les deux serveurs Ubuntu et sur OPNsense (plugin <code>os-zabbix7-agent</code>), avec les modèles Linux et FreeBSD.</li>
+<li><strong>Déclencheurs</strong> sur l'utilisation du CPU, tableaux de bord et graphiques par hôte.</li>
+<li><strong>Continuité</strong> — les scripts Python tournent en services systemd avec redémarrage automatique : si un composant plante, la supervision ne s'arrête pas avec lui.</li>
+</ul>
+<p class="note">Limite : la borne UniFi n'a pas pu être supervisée, car son contrôleur demandait un processeur compatible AVX que le serveur n'avait pas.</p>
+</section><section class="block" id="habilitations"><h2>Habilitations : donner le minimum de droits</h2>
+<h3>Compte Zabbix flowise-bot</h3>
+<p>Les alertes n'étaient jamais transmises, sans aucune erreur visible. En cherchant, j'ai trouvé que l'utilisateur <code>flowise-bot</code> avait la permission <strong>None</strong> sur tous les groupes d'hôtes : Zabbix bloquait les notifications en silence.</p>
+<p>J'ai ajouté un accès en <strong>lecture seule</strong> sur les groupes Databases, LOXYS Servers et Zabbix servers, puis vérifié dans le journal des actions que les envois passaient bien à l'état « Sent ».</p>
+<h3>Compte SSH restreint flowise-diag</h3>
+<p>Donner un accès SSH à une IA sur un serveur est une décision qui doit se justifier. J'ai créé un compte dédié qui ne peut rien modifier :</p>
+<div class="tw"><table><tr><th>Mesure</th><th>Effet</th></tr>
+<tr><td>Aucun droit sudo</td><td>Pas d'administration possible</td></tr>
+<tr><td>Clé Ed25519 dédiée</td><td>Distincte de la clé de l'administrateur</td></tr>
+<tr><td>Commande forcée dans <code>authorized_keys</code></td><td>La clé ne peut lancer qu'un script de diagnostic</td></tr>
+<tr><td><code>no-pty</code>, <code>no-port-forwarding</code></td><td>Pas de shell interactif, pas de tunnel</td></tr>
+<tr><td>Script en lecture seule</td><td>CPU, mémoire, disque, processus, connexions, journaux d'erreurs</td></tr>
+<tr><td>Groupe <code>adm</code></td><td>Lecture des journaux système uniquement</td></tr></table></div>
+<p><strong>Vérification</strong> — à la connexion, le script s'exécute, renvoie les données puis ferme la session ; aucune autre commande n'est possible. Même si l'agent ou sa clé étaient compromis, ils ne pourraient rien modifier sur le serveur.</p>
+</section><section class="block" id="deploiement"><h2>Déploiement, tests et accompagnement</h2>
+<h3>Tests d'intégration</h3>
+<ul>
+<li><strong>Stress tests</strong> — charge CPU générée avec <code>stress-ng</code> sur le serveur Database : l'alerte « High CPU utilization » s'est déclenchée à 97,68 %, et l'agent a identifié les vrais processus <code>stress-ng-cpu</code> grâce au SSH.</li>
+<li><strong>Webhook</strong> — tests de la chaîne Zabbix → Flowise → e-mail, délai du script porté à 60 secondes.</li>
+<li><strong>API</strong> — appels <code>curl</code> pour vérifier que l'agent appelle bien ses outils.</li>
+</ul>
+<h3>Déploiement</h3>
+<p>Zabbix et Flowise en conteneurs Docker, scripts Python et relais mail en services systemd, agents Zabbix sur les trois hôtes.</p>
+<h3>Accompagnement</h3>
+<p>Les e-mails ont été retravaillés pour qu'un technicien comprenne le problème en quelques secondes, et j'ai rédigé une documentation technique complète de l'installation pour LOXYS.</p>
+</section><section class="block" id="difficultes"><h2>Difficultés et solutions</h2>
+<div class="tw"><table><tr><th>Problème</th><th>Solution</th></tr>
+<tr><td>Les outils de l'agent recevaient une entrée vide</td><td>Schéma des outils remis à <code>[]</code> directement dans la base SQLite de Flowise</td></tr>
+<tr><td>L'agent inventait des valeurs</td><td>Prompt système strict, appel obligatoire des outils de données réelles, 5 itérations au maximum</td></tr>
+<tr><td>Module <code>fs</code> bloqué dans le bac à sable de Flowise</td><td>Clé SSH intégrée à l'outil (point à améliorer avec un coffre de secrets)</td></tr>
+<tr><td>MongoDB 7 impossible sans instructions AVX</td><td>Retour à l'image <code>mongo:4.4</code></td></tr>
+<tr><td>Agent Zabbix refusé depuis le réseau Docker</td><td>Plage <code>172.19.0.0/16</code> ajoutée au paramètre <code>Server</code></td></tr>
+<tr><td>Webhook expiré avant la réponse de l'IA</td><td>Délai des scripts porté à 60 secondes</td></tr>
+<tr><td>Conflit de port entre Zabbix et le portail</td><td>Zabbix sur 8080, portail captif sur 80</td></tr>
+<tr><td>Ubuntu 26.04 absent du dépôt Zabbix par défaut</td><td>Dépôt spécifique à cette version</td></tr></table></div>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Donner à l&#x27;agent IA et au compte Zabbix uniquement les droits nécessaires, puis vérifier. <a href="#habilitations">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">1.4</span><div class="comp-txt"><b>Vérifier les conditions de la continuité d&#x27;un service informatique</b>Superviser les serveurs et le pare-feu pour détecter ce qui menace la continuité du service. <a href="#supervision">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Tester l&#x27;intégration par des stress tests, des tests du webhook et des appels d&#x27;API. <a href="#deploiement">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer Zabbix, Flowise et les services Python sur les serveurs. <a href="#deploiement">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.3</span><div class="comp-txt"><b>Accompagner les utilisateurs dans la mise en place d&#x27;un service</b>Livrer des alertes lisibles et une documentation technique pour l&#x27;équipe. <a href="#deploiement">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/supervision/zabbix-dashboard.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/zabbix-dashboard.jpg" alt="Tableau de bord Zabbix 7.0 : hôtes, problèmes et état du serveur" loading="lazy"></a><figcaption>Tableau de bord Zabbix 7.0 : hôtes, problèmes et état du serveur</figcaption></figure>
+<figure><a href="../preuves/supervision/zabbix-problemes.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/zabbix-problemes.jpg" alt="Problèmes détectés par Zabbix" loading="lazy"></a><figcaption>Problèmes détectés par Zabbix</figcaption></figure>
+<figure><a href="../preuves/supervision/graphe-cpu.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/graphe-cpu.jpg" alt="Graphique CPU du serveur Database pendant les stress tests" loading="lazy"></a><figcaption>Graphique CPU du serveur Database pendant les stress tests</figcaption></figure>
+<figure><a href="../preuves/supervision/agent-opnsense.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/agent-opnsense.jpg" alt="Agent Zabbix configuré sur OPNsense" loading="lazy"></a><figcaption>Agent Zabbix configuré sur OPNsense</figcaption></figure>
+<figure><a href="../preuves/supervision/permissions-avant.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/permissions-avant.jpg" alt="Avant : permissions « None » pour flowise-bot, les alertes étaient bloquées" loading="lazy"></a><figcaption>Avant : permissions « None » pour flowise-bot, les alertes étaient bloquées</figcaption></figure>
+<figure><a href="../preuves/supervision/action-log-sent.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/action-log-sent.jpg" alt="Après : l&#x27;alerte part vers l&#x27;agent IA, statut « Sent »" loading="lazy"></a><figcaption>Après : l&#x27;alerte part vers l&#x27;agent IA, statut « Sent »</figcaption></figure>
+<figure><a href="../preuves/supervision/media-type.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/media-type.jpg" alt="Média type « Flowise AI Alert » : le webhook vers l&#x27;agent" loading="lazy"></a><figcaption>Média type « Flowise AI Alert » : le webhook vers l&#x27;agent</figcaption></figure>
+<figure><a href="../preuves/supervision/timeouts.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/timeouts.jpg" alt="Délai des scripts porté à 60 secondes" loading="lazy"></a><figcaption>Délai des scripts porté à 60 secondes</figcaption></figure>
+<figure><a href="../preuves/supervision/chatflow.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/chatflow.jpg" alt="Chatflow Flowise : agent et outils" loading="lazy"></a><figcaption>Chatflow Flowise : agent et outils</figcaption></figure>
+<figure><a href="../preuves/supervision/stress-test.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/stress-test.jpg" alt="Stress tests avec stress-ng sur le serveur Database" loading="lazy"></a><figcaption>Stress tests avec stress-ng sur le serveur Database</figcaption></figure>
+<figure><a href="../preuves/supervision/mail-alerte.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/mail-alerte.jpg" alt="E-mail d&#x27;alerte aux couleurs de LOXYS" loading="lazy"></a><figcaption>E-mail d&#x27;alerte aux couleurs de LOXYS</figcaption></figure>
+<figure><a href="../preuves/supervision/mail-hallucination.jpg" target="_blank" rel="noopener"><img src="../preuves/supervision/mail-hallucination.jpg" alt="Première version : l&#x27;agent invente des valeurs (PID 1234, mysqld), problème corrigé ensuite" loading="lazy"></a><figcaption>Première version : l&#x27;agent invente des valeurs (PID 1234, mysqld), problème corrigé ensuite</figcaption></figure>
+</div>
+<div class="docs">
+<div class="doc"><span>Preuves : habilitations Zabbix, compte SSH restreint et e-mail final</span><a href="../preuves/supervision/preuves-habilitations.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+<div class="doc"><span>Documentation technique complète (secrets masqués)</span><a href="../preuves/supervision/documentation-technique.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+</div></section>
+<div class="pager"><a href="stage-portail-captif.html">← Portail captif WiFi conforme au RGPD</a><a href="stage-planning.html">Planning prévisionnel et bilan du réalisé →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

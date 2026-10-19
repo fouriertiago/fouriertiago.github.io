@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portail captif WiFi conforme au RGPD — Tiago Fourier</title>
+<meta name="description" content="Créer pour LOXYS un WiFi public avec portail captif sur OPNsense, qui collecte les adresses e-mail des visiteurs dans le respect du RGPD, avec une interface d&#x27;administration.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Portail captif WiFi conforme au RGPD</div>
+<div class="peyebrow">Stage de 1re année — LOXYS Solutions Informatiques</div>
+<h1 class="ptitle">Portail captif WiFi conforme au RGPD</h1>
+<p class="plead">Créer pour LOXYS un WiFi public avec portail captif sur OPNsense, qui collecte les adresses e-mail des visiteurs dans le respect du RGPD, avec une interface d&#x27;administration.</p>
+<div class="meta"><span class="chip"><b>Période</b>26/05/2026 – 05/06/2026 (semaines 1 et 2)</span><span class="chip"><b>Cadre</b>Stage</span><span class="chip"><b>Tuteur</b>Thomas Hulin</span></div>
+<div class="toc"><a href="#contexte">Contexte</a><a href="#architecture">Architecture</a><a href="#realisation">Réalisation, jour par jour</a><a href="#difficultes">Difficultés et solutions</a><a href="#rgpd">Conformité RGPD</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte</h2>
+<p><strong>LOXYS Solutions Informatiques</strong> (Saint-Malo-du-Bois, Vendée) gère l'informatique d'environ 130 clients professionnels avec 5 collaborateurs. L'entreprise ne proposait pas encore de portail captif à ses clients.</p>
+<p>La demande : offrir un <strong>WiFi public gratuit</strong> aux visiteurs sans exposer le réseau interne, en collectant leur adresse e-mail de façon <strong>conforme au RGPD</strong> (consentement, droit à l'oubli, durée de conservation limitée). Le projet devait être documenté pour que LOXYS puisse ensuite le proposer à ses clients.</p>
+</section><section class="block" id="architecture"><h2>Architecture</h2>
+<div class="tw"><table><tr><th>Composant</th><th>Rôle</th></tr>
+<tr><td>OPNsense 26.1.10</td><td>Pare-feu, routeur, DHCP et portail captif</td></tr>
+<tr><td>Ubuntu Server</td><td>Serveur web Apache2 + PHP et base de données PostgreSQL (e-mails et jetons)</td></tr>
+<tr><td>Borne UniFi UAP-AC-Mesh</td><td>Diffusion du WiFi public</td></tr></table></div>
+<p>Le serveur de base de données a été installé sur un ancien PC fixe, remis en service avec une clé bootable.</p>
+</section><section class="block" id="realisation"><h2>Réalisation, jour par jour</h2>
+<ol>
+<li><strong>26/05</strong> — présentation de l'infrastructure de LOXYS, planning prévisionnel, prise en main d'OPNsense et configuration du DHCP pour les appareils reliés au switch.</li>
+<li><strong>27/05</strong> — début du portail captif ; règles de pare-feu pour donner Internet au nouveau WiFi tout en le sécurisant.</li>
+<li><strong>28/05</strong> — fin des règles de pare-feu et d'un premier portail captif de test ; début de la base de données sur Ubuntu Server.</li>
+<li><strong>29/05</strong> — liaison entre la base et le portail : les e-mails et les validations RGPD et newsletter sont enregistrés.</li>
+<li><strong>01/06</strong> — corrections (heure de connexion, validation de la newsletter) et ajout du nombre de personnes connectées en direct, grâce à un lien entre la base et OPNsense.</li>
+<li><strong>04/06</strong> — diagnostic : les e-mails ne s'enregistraient plus ; analyse de la base et d'OPNsense.</li>
+<li><strong>05/06</strong> — finalisation de la base et rédaction de la documentation du portail pour LOXYS.</li>
+</ol>
+<h3>Fonctionnalités livrées</h3>
+<ul>
+<li><strong>Page de connexion</strong> aux couleurs de LOXYS : saisie de l'e-mail et acceptation obligatoire du règlement d'utilisation ; inscription à la newsletter <strong>facultative</strong>, distincte du consentement.</li>
+<li><strong>Enregistrement</strong> (<code>save_email.php</code>) — e-mail horodaté et <strong>jeton de suppression unique</strong>.</li>
+<li><strong>Droit à l'oubli</strong> (<code>delete_email.php</code>) — suppression des données via le jeton.</li>
+<li><strong>Purge automatique</strong> — tâche cron quotidienne qui supprime les données de plus d'un an.</li>
+<li><strong>Administration</strong> (<code>admin.php</code>, protégée par mot de passe) — nombre d'inscrits, nombre d'abonnés à la newsletter, nombre de connectés en direct, export CSV des abonnés avec date et heure exactes, pour prouver le consentement en cas de litige.</li>
+</ul>
+</section><section class="block" id="difficultes"><h2>Difficultés et solutions</h2>
+<ul>
+<li><strong>Équipements sans navigateur</strong> — la borne WiFi et le serveur de base de données ne peuvent pas « passer » le portail captif. J'ai créé une exception dans les règles de pare-feu pour leur donner un accès direct, sinon tout le système restait bloqué.</li>
+<li><strong>Heure de connexion et newsletter</strong> — en fin de semaine 1, l'heure était mal enregistrée et la validation de la newsletter incohérente ; corrigé le 01/06 en reprenant le script d'enregistrement.</li>
+<li><strong>E-mails qui ne s'enregistrent plus</strong> — le 04/06, diagnostic croisé de la base et d'OPNsense pour retrouver la cause, puis finalisation le 05/06.</li>
+</ul>
+</section><section class="block" id="rgpd"><h2>Conformité RGPD</h2>
+<div class="tw"><table><tr><th>Exigence</th><th>Mise en œuvre</th></tr>
+<tr><td>Consentement explicite</td><td>Case obligatoire, non pré-cochée</td></tr>
+<tr><td>Consentement distinct pour la newsletter</td><td>Case facultative séparée</td></tr>
+<tr><td>Durée de conservation limitée</td><td>Purge automatique au-delà d'un an</td></tr>
+<tr><td>Droit à l'oubli</td><td>Jeton de suppression unique</td></tr>
+<tr><td>Preuve du consentement</td><td>Export horodaté des abonnés</td></tr></table></div>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">2.2</span><div class="comp-txt"><b>Traiter des demandes concernant les services réseau et système, applicatifs</b>Répondre à une demande d&#x27;évolution de l&#x27;entreprise : un nouveau service réseau et applicatif, documenté pour être proposé aux clients. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/captif/installation.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/installation.jpg" alt="Installation physique : mini PC OPNsense, borne WiFi, switch et serveur de base de données" loading="lazy"></a><figcaption>Installation physique : mini PC OPNsense, borne WiFi, switch et serveur de base de données</figcaption></figure>
+<figure><a href="../preuves/captif/schema-reseau.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/schema-reseau.jpg" alt="Schéma réseau WAN / LAN du portail captif" loading="lazy"></a><figcaption>Schéma réseau WAN / LAN du portail captif</figcaption></figure>
+<figure><a href="../preuves/captif/structure.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/structure.jpg" alt="Structure du serveur : fichiers PHP et rôle de chacun" loading="lazy"></a><figcaption>Structure du serveur : fichiers PHP et rôle de chacun</figcaption></figure>
+<figure><a href="../preuves/captif/page-connexion.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/page-connexion.jpg" alt="Page du portail captif : e-mail, règlement obligatoire, newsletter facultative" loading="lazy"></a><figcaption>Page du portail captif : e-mail, règlement obligatoire, newsletter facultative</figcaption></figure>
+<figure><a href="../preuves/captif/regles-pare-feu.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/regles-pare-feu.jpg" alt="Règles de pare-feu OPNsense" loading="lazy"></a><figcaption>Règles de pare-feu OPNsense</figcaption></figure>
+<figure><a href="../preuves/captif/admin-connexion.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/admin-connexion.jpg" alt="Connexion à l&#x27;interface d&#x27;administration" loading="lazy"></a><figcaption>Connexion à l&#x27;interface d&#x27;administration</figcaption></figure>
+<figure><a href="../preuves/captif/admin-interface.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/admin-interface.jpg" alt="Administration : inscrits, abonnés, connectés en direct (e-mails floutés)" loading="lazy"></a><figcaption>Administration : inscrits, abonnés, connectés en direct (e-mails floutés)</figcaption></figure>
+<figure><a href="../preuves/captif/opnsense.jpg" target="_blank" rel="noopener"><img src="../preuves/captif/opnsense.jpg" alt="Tableau de bord OPNsense : service Captive Portal actif" loading="lazy"></a><figcaption>Tableau de bord OPNsense : service Captive Portal actif</figcaption></figure>
+</div>
+<div class="docs">
+<div class="doc"><span>Documentation du portail captif remise à LOXYS (données personnelles floutées)</span><a href="../preuves/captif/documentation-portail-captif.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+</div></section>
+<div class="pager"><a href="ap2-reseau-medicaplus.html">← Réseau sécurisé de la clinique MedicaPlus</a><a href="stage-supervision-ia.html">Supervision Zabbix et agent IA de diagnostic →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

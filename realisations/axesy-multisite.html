@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plateforme web multi-site sécurisée (Axesy) — Tiago Fourier</title>
+<meta name="description" content="Héberger deux sites internes sur un seul serveur Debian, chacun accessible par son nom et protégé par mot de passe, avec des droits différents selon l&#x27;utilisateur.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Plateforme web multi-site sécurisée (Axesy)</div>
+<div class="peyebrow">Formation 2e année — Évaluation</div>
+<h1 class="ptitle">Plateforme web multi-site sécurisée (Axesy)</h1>
+<p class="plead">Héberger deux sites internes sur un seul serveur Debian, chacun accessible par son nom et protégé par mot de passe, avec des droits différents selon l&#x27;utilisateur.</p>
+<div class="meta"><span class="chip"><b>Date</b>01/10/2026</span><span class="chip"><b>Cadre</b>Évaluation individuelle</span><span class="chip"><b>Environnement</b>Debian 12</span></div>
+<div class="toc"><a href="#contexte">Contexte et demande</a><a href="#choix">Choix techniques</a><a href="#realisation">Réalisation</a><a href="#recette">Plan de recette</a><a href="#evolutions">Évolutions identifiées</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte et demande</h2>
+<p>La société Axesy veut une plateforme de suivi accessible depuis un navigateur, composée de deux sites : <code>www.projet.local</code> et <code>www.realisation.local</code>.</p>
+<ul>
+<li><strong>Acteurs</strong> — le directeur, le chef de projet et deux techniciens.</li>
+<li><strong>Exigences</strong> — un seul serveur pour les deux sites ; chaque site accessible par son propre nom.</li>
+<li><strong>Sécurité</strong> — authentification par mot de passe ; le site projet est réservé au directeur et au chef de projet.</li>
+</ul>
+</section><section class="block" id="choix"><h2>Choix techniques</h2>
+<ul>
+<li><strong>Debian 12</strong> — système libre, gratuit et adapté à l'hébergement web.</li>
+<li><strong>Apache2 et VirtualHosts</strong> — deux sites sur un seul serveur.</li>
+<li><strong>Authentification Basic</strong> — un fichier <code>.htpasswd</code> par site pour attribuer des droits différents.</li>
+<li><strong>Bind9</strong> — un serveur DNS pour accéder aux sites par leur nom plutôt que par leur adresse IP.</li>
+</ul>
+</section><section class="block" id="realisation"><h2>Réalisation</h2>
+<ol>
+<li>Configuration des dépôts, mise à jour et installation d'Apache2.</li>
+<li>Création des dossiers <code>/var/www/html/projet</code> et <code>/var/www/html/realisation</code> avec leur page d'accueil.</li>
+<li>Un fichier de configuration par site, copié depuis <code>000-default.conf</code>, puis activation avec <code>a2ensite</code>.</li>
+<li>Fichiers de mots de passe : le site projet pour le directeur et le chef de projet ; le site réalisation pour l'ensemble de l'équipe.</li>
+<li>Serveur DNS Bind9 : une zone par domaine (<code>db.projet.local</code>, <code>db.realisation.local</code>), redémarrage et vérification du service.</li>
+<li>Configuration du client pour utiliser ce DNS.</li>
+</ol>
+</section><section class="block" id="recette"><h2>Plan de recette</h2>
+<p>J'ai rédigé un plan de recette de 10 tests, depuis un client Debian 12 avec Firefox :</p>
+<ul>
+<li>8 tests d'accès : chaque utilisateur sur chaque site, pour vérifier qu'il est accepté ou refusé selon ses droits ;</li>
+<li>2 tests de résolution de noms avec <code>nslookup</code>.</li>
+</ul>
+</section><section class="block" id="evolutions"><h2>Évolutions identifiées</h2>
+<ul>
+<li><strong>HTTPS</strong> — l'authentification Basic transmet les mots de passe en clair sur HTTP.</li>
+<li><strong>Disponibilité</strong> — redondance sur au moins deux serveurs, répartition de charge, RAID avec disque de secours.</li>
+<li><strong>Exploitation</strong> — supervision et sauvegardes.</li>
+</ul>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Réserver chaque site aux bons utilisateurs grâce à un fichier de mots de passe par site. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Rédiger et dérouler un plan de recette en 10 tests. <a href="#recette">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">5.2</span><div class="comp-txt"><b>Déployer un service</b>Déployer Apache2, les VirtualHosts et le DNS Bind9. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><p class="note">Preuves en cours d'ajout.</p></section>
+<div class="pager"><a href="stage-evenementiel.html">← Déploiement réseau événementiel</a><a href="novaxis-sauvegarde.html">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

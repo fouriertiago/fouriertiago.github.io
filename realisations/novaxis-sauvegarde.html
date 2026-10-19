@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis) — Tiago Fourier</title>
+<meta name="description" content="Sauvegarder chaque nuit le site web et la base de données d&#x27;une entreprise vers un serveur externe, de façon chiffrée et automatique, et pouvoir tout restaurer après une panne.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis)</div>
+<div class="peyebrow">Formation 2e année — Séquence sauvegardes</div>
+<h1 class="ptitle">Sauvegarde automatisée d&#x27;un site et de sa base (Novaxis)</h1>
+<p class="plead">Sauvegarder chaque nuit le site web et la base de données d&#x27;une entreprise vers un serveur externe, de façon chiffrée et automatique, et pouvoir tout restaurer après une panne.</p>
+<div class="meta"><span class="chip"><b>Date</b>06/10/2026</span><span class="chip"><b>Cadre</b>Cours SISR 2e année</span><span class="chip"><b>Environnement</b>Linux, MySQL</span><span class="chip status">Mise en œuvre en TP en cours</span></div>
+<div class="toc"><a href="#contexte">Contexte et demande</a><a href="#exigences">Exigences</a><a href="#solution">Solution retenue</a><a href="#evolutions">Évolutions identifiées</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte et demande</h2>
+<p>L'entreprise Novaxis veut sauvegarder automatiquement son site web et sa base <strong>« overdata »</strong> vers un serveur externe, pour pouvoir restaurer les données après une perte ou un crash, sans gêner les employés qui utilisent le site toute la journée.</p>
+</section><section class="block" id="exigences"><h2>Exigences</h2>
+<div class="tw"><table><tr><th>Exigence</th><th>Réponse</th></tr>
+<tr><td>Disponibilité</td><td>Sauvegarde la nuit, sans interruption du site</td></tr>
+<tr><td>Fiabilité</td><td>Sauvegarde quotidienne et restauration testée</td></tr>
+<tr><td>Intégrité</td><td>Fichier <code>.sql</code> complet, identique à la source</td></tr>
+<tr><td>Automatisation</td><td>Aucune action manuelle des employés</td></tr></table></div>
+</section><section class="block" id="solution"><h2>Solution retenue</h2>
+<ul>
+<li><strong>Sauvegarde</strong> — un script lancé par <code>cron</code> chaque jour à 22 h 30 exporte la base avec <code>mysqldump</code> et copie le site.</li>
+<li><strong>Transfert</strong> — envoi par <code>scp</code> vers un serveur de sauvegarde externe, avec une clé SSH, sans mot de passe ni accès root.</li>
+<li><strong>Sécurité</strong> — utilisateur dédié, dossier de sauvegarde à droits restreints, mot de passe MySQL stocké dans <code>.my.cnf</code> en droits 600 et non dans la commande.</li>
+<li><strong>Restauration</strong> — réimport du fichier <code>.sql</code> avec <code>mysql</code>.</li>
+</ul>
+<h3>Pourquoi ces choix</h3>
+<p>Ce sont des outils natifs de Linux, gratuits et maîtrisés ; la sauvegarde de nuit n'a aucun impact sur les employés ; le serveur externe protège les données en cas de panne du serveur principal.</p>
+</section><section class="block" id="evolutions"><h2>Évolutions identifiées</h2>
+<ul>
+<li>Chiffrer les sauvegardes avant l'envoi.</li>
+<li>Conserver plusieurs versions, avec une rotation sur 7 jours.</li>
+<li>Recevoir une alerte e-mail en cas d'échec.</li>
+<li>Ajouter un second serveur de sauvegarde.</li>
+</ul>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.5</span><div class="comp-txt"><b>Gérer des sauvegardes</b>Concevoir une sauvegarde automatique et sa procédure de restauration. <a href="#solution">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">1.4</span><div class="comp-txt"><b>Vérifier les conditions de la continuité d&#x27;un service informatique</b>Garantir que le site reste disponible et que les données survivent à une panne locale. <a href="#exigences">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><p class="note">Preuves en cours d'ajout.</p></section>
+<div class="pager"><a href="axesy-multisite.html">← Plateforme web multi-site sécurisée (Axesy)</a><span></span></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

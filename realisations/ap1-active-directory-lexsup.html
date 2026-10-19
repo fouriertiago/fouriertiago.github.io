@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infrastructure Active Directory Lexsup — Tiago Fourier</title>
+<meta name="description" content="Mettre en place l&#x27;annuaire Active Directory du réseau de l&#x27;organisation Lexsup : domaine, unités d&#x27;organisation par service, comptes, dossiers personnels et partagés, stratégie de groupe.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Infrastructure Active Directory Lexsup</div>
+<div class="peyebrow">Formation 1re année — Atelier professionnel AP-1</div>
+<h1 class="ptitle">Infrastructure Active Directory Lexsup</h1>
+<p class="plead">Mettre en place l&#x27;annuaire Active Directory du réseau de l&#x27;organisation Lexsup : domaine, unités d&#x27;organisation par service, comptes, dossiers personnels et partagés, stratégie de groupe.</p>
+<div class="meta"><span class="chip"><b>Période</b>20/11/2025 – 04/12/2025</span><span class="chip"><b>Cadre</b>Atelier professionnel</span><span class="chip"><b>Environnement</b>Windows Server</span></div>
+<div class="toc"><a href="#contexte">Contexte</a><a href="#plan-reseau">Plan réseau</a><a href="#realisation">Réalisation</a><a href="#tests">Tests</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte</h2>
+<p>Lexsup a besoin d'un réseau d'entreprise centralisé : chaque employé doit avoir un compte, retrouver ses documents personnels et accéder aux dossiers communs de son service, avec des règles de sécurité appliquées à tous.</p>
+<p>Le livrable attendu est l'infrastructure fonctionnelle et un <strong>document technique</strong> qui permet de la comprendre et de la reproduire.</p>
+</section><section class="block" id="plan-reseau"><h2>Plan réseau</h2>
+<p>Avant de configurer quoi que ce soit, j'ai réalisé un <strong>plan réseau</strong>. Il permet de visualiser l'infrastructure, de retrouver rapidement chaque machine et de configurer plus facilement ses interfaces.</p>
+</section><section class="block" id="realisation"><h2>Réalisation</h2>
+<h3>Arborescence de l'annuaire</h3>
+<p>J'ai d'abord conçu l'arborescence : une unité d'organisation (UO) <strong>Employés</strong>, puis une UO par service. Chaque UO de service contient un groupe par métier, dans lequel sont placés les employés.</p>
+<h3>Configuration du serveur</h3>
+<ol>
+<li><strong>Renommage du serveur</strong> — un nom clair, réutilisé ensuite dans les scripts et les chemins des répertoires utilisateurs.</li>
+<li><strong>Rôle AD DS</strong> — ajout des services de domaine Active Directory.</li>
+<li><strong>Nouvelle forêt</strong> — création du domaine <code>lexsup.local</code> et configuration du mot de passe.</li>
+<li><strong>Création de l'arborescence</strong> — UO et groupes, connecté en administrateur du domaine.</li>
+</ol>
+<h3>Utilisateurs et dossiers</h3>
+<ul>
+<li><strong>Comptes</strong> — chaque utilisateur créé dans l'UO de son service, ajouté à son groupe métier, avec un mot de passe provisoire.</li>
+<li><strong>Répertoires personnels</strong> — un dossier par utilisateur, accessible à lui seul.</li>
+<li><strong>Dossiers communs</strong> — un dossier par service, monté automatiquement par un <strong>script de connexion</strong> à l'ouverture de session.</li>
+</ul>
+<h3>Stratégie de groupe (GPO)</h3>
+<p>J'ai appliqué une GPO sur l'UO Employés pour imposer les restrictions de mot de passe à tous les comptes.</p>
+</section><section class="block" id="tests"><h2>Tests</h2>
+<p>J'ai connecté un poste client au domaine, ouvert une session utilisateur et vérifié que le répertoire personnel et le dossier commun du service étaient bien montés.</p>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.1</span><div class="comp-txt"><b>Recenser et identifier les ressources numériques</b>Recenser les équipements et interfaces du réseau dans un plan réseau. <a href="#plan-reseau">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">2.2</span><div class="comp-txt"><b>Traiter des demandes concernant les services réseau et système, applicatifs</b>Traiter la demande de service système : domaine, comptes, partages, scripts et GPO. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">2.3</span><div class="comp-txt"><b>Traiter des demandes concernant les applications</b>Rédiger un document technique conforme au cahier des charges. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/ap1/plan-reseau.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/plan-reseau.jpg" alt="Plan réseau de l&#x27;infrastructure" loading="lazy"></a><figcaption>Plan réseau de l&#x27;infrastructure</figcaption></figure>
+<figure><a href="../preuves/ap1/arborescence.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/arborescence.jpg" alt="Arborescence de l&#x27;annuaire : UO Employés, une UO par service, groupes et utilisateurs" loading="lazy"></a><figcaption>Arborescence de l&#x27;annuaire : UO Employés, une UO par service, groupes et utilisateurs</figcaption></figure>
+<figure><a href="../preuves/ap1/ad-ds.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/ad-ds.jpg" alt="Promotion du serveur en contrôleur de domaine" loading="lazy"></a><figcaption>Promotion du serveur en contrôleur de domaine</figcaption></figure>
+<figure><a href="../preuves/ap1/uo.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/uo.jpg" alt="Création des unités d&#x27;organisation" loading="lazy"></a><figcaption>Création des unités d&#x27;organisation</figcaption></figure>
+<figure><a href="../preuves/ap1/utilisateur.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/utilisateur.jpg" alt="Création d&#x27;un utilisateur dans l&#x27;UO de son service" loading="lazy"></a><figcaption>Création d&#x27;un utilisateur dans l&#x27;UO de son service</figcaption></figure>
+<figure><a href="../preuves/ap1/profil.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/profil.jpg" alt="Profil de l&#x27;utilisateur et dossier personnel" loading="lazy"></a><figcaption>Profil de l&#x27;utilisateur et dossier personnel</figcaption></figure>
+<figure><a href="../preuves/ap1/partages.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/partages.jpg" alt="Dossiers personnels et communs sur le serveur" loading="lazy"></a><figcaption>Dossiers personnels et communs sur le serveur</figcaption></figure>
+<figure><a href="../preuves/ap1/gpo-1.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/gpo-1.jpg" alt="GPO liée à l&#x27;UO Employés" loading="lazy"></a><figcaption>GPO liée à l&#x27;UO Employés</figcaption></figure>
+<figure><a href="../preuves/ap1/gpo-2.jpg" target="_blank" rel="noopener"><img src="../preuves/ap1/gpo-2.jpg" alt="Paramètres de mot de passe imposés par la GPO" loading="lazy"></a><figcaption>Paramètres de mot de passe imposés par la GPO</figcaption></figure>
+</div>
+<div class="docs">
+<div class="doc"><span>Document technique AP-1 (Lexsup)</span><a href="../preuves/ap1/document-technique-lexsup.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+</div></section>
+<div class="pager"><a href="ap0-site-eco-gite.html">← Site web d&#x27;un éco-gîte</a><a href="ap2-reseau-medicaplus.html">Réseau sécurisé de la clinique MedicaPlus →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>

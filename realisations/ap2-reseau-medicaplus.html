@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réseau sécurisé de la clinique MedicaPlus — Tiago Fourier</title>
+<meta name="description" content="Concevoir sur Cisco Packet Tracer une infrastructure segmentée et sécurisée pour une clinique, avec VLAN, DMZ, routage OSPF, DHCP et ACL, puis prouver par des tests que chaque règle fonctionne.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E4</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#realisations">Réalisations</a> › Réseau sécurisé de la clinique MedicaPlus</div>
+<div class="peyebrow">Formation 1re année — Atelier professionnel AP-2</div>
+<h1 class="ptitle">Réseau sécurisé de la clinique MedicaPlus</h1>
+<p class="plead">Concevoir sur Cisco Packet Tracer une infrastructure segmentée et sécurisée pour une clinique, avec VLAN, DMZ, routage OSPF, DHCP et ACL, puis prouver par des tests que chaque règle fonctionne.</p>
+<div class="meta"><span class="chip"><b>Période</b>15/01/2026 – 09/04/2026</span><span class="chip"><b>Cadre</b>Atelier professionnel</span><span class="chip"><b>Équipe</b>3 étudiants</span><span class="chip"><b>Outil</b>Cisco Packet Tracer</span></div>
+<div class="toc"><a href="#contexte">Contexte</a><a href="#planification">Organisation et planification</a><a href="#realisation">Réalisation</a><a href="#habilitations">Habilitations : VLAN et ACL</a><a href="#difficultes">Difficultés et solutions</a><a href="#competences">Compétences E4</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte</h2>
+<p>La clinique MedicaPlus veut moderniser son système d'information. Les données médicales sont sensibles, et plusieurs populations partagent le même réseau : personnel médical, personnel administratif, patients et serveurs.</p>
+<p>Le cahier des charges impose :</p>
+<ul>
+<li>des <strong>VLAN séparés</strong> pour le personnel médical, l'administratif, les patients et les serveurs ;</li>
+<li>un accès <strong>Internet seul</strong> pour les patients, via un VLAN WiFi dédié, sans accès aux VLAN internes ;</li>
+<li>l'administratif sans accès aux dossiers médicaux ; le médical avec accès aux serveurs internes ;</li>
+<li>un <strong>serveur web en DMZ</strong>, accessible depuis Internet et certains VLAN autorisés ;</li>
+<li>aucun flux non autorisé de la DMZ vers le LAN.</li>
+</ul>
+</section><section class="block" id="planification"><h2>Organisation et planification</h2>
+<p>Nous avons construit un <strong>diagramme de Gantt</strong> pour découper le projet en phases et nous répartir le travail à trois. Le document technique renvoie vers ce Gantt et présente la répartition des tâches.</p>
+</section><section class="block" id="realisation"><h2>Réalisation</h2>
+<h3>Matériel</h3>
+<div class="tw"><table><tr><th>Équipement</th><th>Rôle</th></tr>
+<tr><td>2 routeurs Cisco</td><td>Routeur du réseau interne et routeur de la DMZ</td></tr>
+<tr><td>2 switchs Cisco</td><td>Switch du réseau privé et switch du réseau public</td></tr>
+<tr><td>Windows Server 2019</td><td>Serveur DHCP</td></tr>
+<tr><td>Serveur web</td><td>Site de la clinique, hébergé en DMZ</td></tr>
+<tr><td>Postes clients</td><td>Au moins un par VLAN, pour les tests</td></tr></table></div>
+<h3>Commutation</h3>
+<ul>
+<li><strong>Switch privé</strong> — <code>fa0/1</code> en trunk vers le routeur ; <code>fa0/2</code> et <code>fa0/3</code> en access dans leur VLAN.</li>
+<li><strong>Switch public</strong> — <code>fa0/1</code> en trunk vers le routeur ; <code>fa0/3</code> en access dans son VLAN.</li>
+</ul>
+<h3>Routage</h3>
+<ul>
+<li><strong>Sous-interfaces</strong> — une interface virtuelle par VLAN sur le routeur interne (VLAN 10, 20 et 30 sur <code>gig0/0</code>, VLAN 40 sur <code>gig0/1</code>), et une liaison série <code>se0/0/1</code> vers le routeur de la DMZ.</li>
+<li><strong>DMZ</strong> — sur le routeur DMZ, <code>gig0/1</code> est la passerelle du serveur web (192.168.50.254).</li>
+<li><strong>Routes statiques puis OSPF</strong> — deux routes statiques ont d'abord servi à tester le réseau, puis nous sommes passés au routage dynamique OSPF entre les deux routeurs, pour que le réseau puisse évoluer (nouveau bâtiment, extension du réseau patients).</li>
+</ul>
+<h3>Services</h3>
+<ul>
+<li><strong>DHCP</strong> — installé sur le réseau 192.168.20.0, il distribue les adresses des réseaux 192.168.10.0 et 192.168.40.0 avec des plages distinctes.</li>
+<li><strong>Serveur web</strong> — Microsoft IIS, sur un serveur Windows contrôleur de domaine.</li>
+</ul>
+</section><section class="block" id="habilitations"><h2>Habilitations : VLAN et ACL</h2>
+<p>La segmentation en VLAN sépare les populations ; les <strong>ACL</strong> sur les routeurs décident ensuite quels flux sont autorisés entre elles. L'ACL 1, appliquée notamment sur l'interface de la DMZ, filtre les échanges entre le réseau public, les réseaux internes et le serveur web.</p>
+<p>Pour vérifier ces habilitations, nous avons placé un client dans le réseau public (192.168.40.0) et un client dans le réseau interne (192.168.10.0), puis testé chaque cas :</p>
+<div class="tw"><table><tr><th>Test</th><th>Attendu</th><th>Résultat</th></tr>
+<tr><td>Client public → réseaux internes (ping)</td><td>Bloqué</td><td>Bloqué par l'ACL 1</td></tr>
+<tr><td>Client public → site du serveur web</td><td>Bloqué (cahier des charges)</td><td>Bloqué par l'ACL 1</td></tr>
+<tr><td>Client interne → site du serveur web</td><td>Autorisé</td><td>Page affichée</td></tr>
+<tr><td>Client interne → autres réseaux internes</td><td>Autorisé</td><td>Communication établie</td></tr>
+<tr><td>Serveur web → réseaux internes / réseau externe</td><td>Interne seulement</td><td>Externe bloqué par l'ACL 1</td></tr>
+<tr><td>DHCP → clients interne et public</td><td>Adresses attribuées</td><td>Adresses reçues ; le réseau public n'est pas joignable par ping, à cause de l'ACL 1</td></tr></table></div>
+</section><section class="block" id="difficultes"><h2>Difficultés et solutions</h2>
+<ul>
+<li><strong>Pings bloqués par les pare-feux Windows</strong> — les premiers tests échouaient alors que la configuration réseau était correcte. Le pare-feu des postes et du serveur DHCP bloquait les échanges ; nous l'avons désactivé pour les tests. Avec le recul, il suffirait d'autoriser uniquement l'ICMP plutôt que de couper tout le pare-feu.</li>
+<li><strong>Valider avant d'automatiser</strong> — les routes statiques nous ont permis de valider la connectivité avant de passer à OSPF, ce qui a simplifié le diagnostic.</li>
+</ul>
+</section>
+<section class="block" id="competences"><h2>Compétences E4 mobilisées</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Définir qui peut joindre quoi avec des VLAN et des ACL, puis le vérifier par des tests. <a href="#habilitations">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">2.2</span><div class="comp-txt"><b>Traiter des demandes concernant les services réseau et système, applicatifs</b>Traiter une demande réseau complète : segmentation, routage, DHCP, serveur web. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">2.3</span><div class="comp-txt"><b>Traiter des demandes concernant les applications</b>Documenter les choix et configurations dans un document technique. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code">4.2</span><div class="comp-txt"><b>Planifier les activités</b>Planifier et répartir les tâches de l&#x27;équipe avec un Gantt. <a href="#planification">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">Ces compétences sont reportées dans mon <a href="../competences.html">tableau de synthèse E4</a>.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/ap2/topologie.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/topologie.jpg" alt="Maquette Cisco Packet Tracer : réseau interne, réseau public et DMZ" loading="lazy"></a><figcaption>Maquette Cisco Packet Tracer : réseau interne, réseau public et DMZ</figcaption></figure>
+<figure><a href="../preuves/ap2/gantt.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/gantt.jpg" alt="Diagramme de Gantt et répartition des tâches" loading="lazy"></a><figcaption>Diagramme de Gantt et répartition des tâches</figcaption></figure>
+<figure><a href="../preuves/ap2/switch-prive.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/switch-prive.jpg" alt="Switch privé : trunk vers le routeur, ports access par VLAN" loading="lazy"></a><figcaption>Switch privé : trunk vers le routeur, ports access par VLAN</figcaption></figure>
+<figure><a href="../preuves/ap2/sous-interfaces.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/sous-interfaces.jpg" alt="Routeur : une sous-interface par VLAN, relais DHCP" loading="lazy"></a><figcaption>Routeur : une sous-interface par VLAN, relais DHCP</figcaption></figure>
+<figure><a href="../preuves/ap2/acl.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/acl.jpg" alt="ACL 1 : le réseau public 192.168.40.0 est bloqué" loading="lazy"></a><figcaption>ACL 1 : le réseau public 192.168.40.0 est bloqué</figcaption></figure>
+<figure><a href="../preuves/ap2/ospf.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/ospf.jpg" alt="Routage dynamique OSPF" loading="lazy"></a><figcaption>Routage dynamique OSPF</figcaption></figure>
+<figure><a href="../preuves/ap2/dhcp.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/dhcp.jpg" alt="Serveur DHCP : une étendue par réseau" loading="lazy"></a><figcaption>Serveur DHCP : une étendue par réseau</figcaption></figure>
+<figure><a href="../preuves/ap2/test-public-bloque.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/test-public-bloque.jpg" alt="Test : le client public ne peut pas ouvrir le site" loading="lazy"></a><figcaption>Test : le client public ne peut pas ouvrir le site</figcaption></figure>
+<figure><a href="../preuves/ap2/test-prive-iis.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/test-prive-iis.jpg" alt="Test : le client interne accède au site IIS" loading="lazy"></a><figcaption>Test : le client interne accède au site IIS</figcaption></figure>
+<figure><a href="../preuves/ap2/tests-ping.jpg" target="_blank" rel="noopener"><img src="../preuves/ap2/tests-ping.jpg" alt="Tests de connectivité par ping" loading="lazy"></a><figcaption>Tests de connectivité par ping</figcaption></figure>
+</div>
+<div class="docs">
+<div class="doc"><span>Document technique AP-2 (MedicaPlus)</span><a href="../preuves/ap2/document-technique-medicaplus.pdf" target="_blank" rel="noopener">Ouvrir le PDF</a></div>
+</div></section>
+<div class="pager"><a href="ap1-active-directory-lexsup.html">← Infrastructure Active Directory Lexsup</a><a href="stage-portail-captif.html">Portail captif WiFi conforme au RGPD →</a></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+</body>
+</html>
