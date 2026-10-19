@@ -22,8 +22,8 @@
 <div class="crumb"><a href="index.html">Accueil</a> › Veille informationnelle</div>
 <div class="peyebrow">Veille informationnelle — Organiser son développement professionnel</div>
 <h1 class="ptitle">L'IA appliquée à la supervision des infrastructures</h1>
-<p class="plead">Peut-on confier le diagnostic des incidents à une intelligence artificielle, et avec quelles garanties ? Je suis ce sujet depuis mon projet de stage, où j'ai relié un agent IA à Zabbix.</p>
-<div class="meta"><span class="chip"><b>Sujet</b>AIOps : IA + supervision</span><span class="chip"><b>Période suivie</b>2026 – mars 2027</span><span class="chip"><b>Dernière mise à jour</b>octobre 2026</span></div>
+<p class="plead">Peut-on confier le diagnostic des incidents à une intelligence artificielle, et avec quelles garanties ? Ce sujet est né de mon projet de stage, où j'ai relié un agent IA à Zabbix ; j'en ai fait mon sujet de veille en octobre 2026.</p>
+<div class="meta"><span class="chip"><b>Sujet</b>AIOps : IA + supervision</span><span class="chip"><b>Période suivie</b>octobre 2026 – mars 2027</span><span class="chip"><b>Dernière mise à jour</b>octobre 2026</span></div>
 <div class="toc"><a href="#sujet">Sujet</a><a href="#veille-opnsense">Point de départ</a><a href="#organisation">Organisation</a><a href="#sources">Sources</a><a href="#journal">Journal</a><a href="#synthese">Synthèse</a><a href="#apports">Ce que j'en retiens</a></div>
 </div></header>
 <main class="pbody">
@@ -46,15 +46,15 @@
 
 <section class="block" id="organisation"><h2>Mon organisation de veille</h2>
 <h3>Outils</h3>
-<div class="tw"><table><tr><th>Outil</th><th>Méthode</th><th>Utilisation</th></tr>
-<tr><td>Feedly</td><td>Push</td><td>Agrégateur de flux RSS, une catégorie par rubrique : je lis tout au même endroit, sans encombrer ma boîte mail.</td></tr>
-<tr><td>Google Alertes</td><td>Push</td><td>Alertes sur « Zabbix », « AIOps », « supervision IA », « Zabbix MCP » : je suis prévenu quand un nouvel article sort ailleurs que dans mes sources.</td></tr>
-<tr><td>Forum et blog Zabbix</td><td>Push</td><td>Annonces officielles et projets de la communauté.</td></tr>
-<tr><td>Moteur de recherche</td><td>Pull</td><td>Recherches ciblées pour vérifier ou approfondir une information.</td></tr>
-<tr><td>Assistant IA</td><td>Pull</td><td>Uniquement pour trouver des pistes ou résumer un long document ; chaque information est ensuite vérifiée sur la source d'origine.</td></tr></table></div>
-<h3>Rythme</h3>
+<div class="tw"><table><tr><th>Outil</th><th>Méthode</th><th>Utilisation</th><th>État</th></tr>
+<tr><td>Google Alertes</td><td>Push</td><td>Quatre alertes : « Zabbix », « AIOps », « Zabbix MCP » (toutes langues) et « supervision IA » (français). Un résumé par e-mail une fois par semaine au maximum, avec seulement les meilleurs résultats.</td><td>En place depuis le 19/10/2026</td></tr>
+<tr><td>Feedly</td><td>Push</td><td>Agrégateur de flux RSS, une catégorie par rubrique, pour lire le blog Zabbix, IT-Connect et mes autres sources au même endroit.</td><td>À configurer</td></tr>
+<tr><td>Forum et blog Zabbix</td><td>Push</td><td>Annonces officielles et projets de la communauté.</td><td>À ajouter dans Feedly</td></tr>
+<tr><td>Moteur de recherche</td><td>Pull</td><td>Recherches ciblées pour vérifier ou approfondir une information.</td><td>Utilisé</td></tr>
+<tr><td>Assistant IA</td><td>Pull</td><td>Pour trouver des pistes ou résumer un long document ; l'information doit ensuite être vérifiée sur la source d'origine.</td><td>Utilisé</td></tr></table></div>
+<h3>Rythme prévu</h3>
 <ul>
-<li><strong>Chaque semaine</strong> — 30 minutes pour trier Feedly et les alertes : je garde, j'écarte ou je mets de côté.</li>
+<li><strong>Chaque semaine</strong> — 30 minutes pour trier les alertes (et Feedly une fois configuré) : je garde, j'écarte ou je mets de côté.</li>
 <li><strong>Chaque mois</strong> — j'ajoute les articles retenus au journal ci-dessous avec un résumé et ce qu'ils m'apprennent.</li>
 <li><strong>Mars 2027</strong> — synthèse finale mise à jour pour l'épreuve.</li>
 </ul>
@@ -82,7 +82,8 @@
 </section>
 
 <section class="block" id="journal"><h2>Journal de veille</h2>
-<div class="tw"><table><tr><th>Date</th><th>Source</th><th>Ce que j'en retiens</th></tr>
+<p>Premières sources sélectionnées en octobre 2026, au lancement de ma veille. La date indiquée est celle de publication de l'article. Le journal sera complété chaque mois avec les articles retenus.</p>
+<div class="tw"><table><tr><th>Publication</th><th>Source</th><th>Ce qu'il faut en retenir</th></tr>
 <tr><td>Oct. 2026</td><td><a href="https://hub.docker.com/r/zabbix/zabbix-mcp-server" target="_blank" rel="noopener">Docker Hub — image officielle zabbix-mcp-server</a></td><td>Zabbix publie son propre serveur MCP (version 8.0) : un agent IA peut consulter les hôtes et les problèmes, mais aussi acquitter, fermer des problèmes et gérer des maintenances. Chaque requête utilise le jeton de l'utilisateur et apparaît dans le journal d'audit. Les outils d'écriture sont <strong>activés par défaut</strong> : à restreindre avant toute mise en production.</td></tr>
 <tr><td>29/07/2026</td><td><a href="https://www.blogdumoderateur.com/ia-act-2-aout-2026/" target="_blank" rel="noopener">Blog du Modérateur — AI Act, 2 août 2026</a></td><td>Les obligations de transparence entrent en application le 2 août 2026 : un utilisateur doit savoir qu'il échange avec une IA. Le Digital Omnibus repousse les obligations des systèmes à haut risque à décembre 2027 et août 2028.</td></tr>
 <tr><td>09/06/2026</td><td><a href="https://blog.zabbix.com/exploring-ai-integration-in-zabbix-with-gemini-and-webmcp/" target="_blank" rel="noopener">Blog Zabbix — IA, Gemini et WebMCP</a></td><td>Un spécialiste supervision interroge Zabbix en langage naturel via MCP. Ses conseils : commencer en lecture seule, l'agent ne voit que ce que permet le rôle de l'utilisateur, et le serveur MCP doit lui-même être supervisé.</td></tr>

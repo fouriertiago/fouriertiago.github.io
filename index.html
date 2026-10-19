@@ -552,7 +552,7 @@ footer{background:var(--blue);color:rgba(255,255,255,.4);padding:36px 48px;text-
           <div class="mcard-live">En cours</div>
           <div class="mcard-num">Depuis Sept. 2026</div>
           <div class="mcard-title">Alternance — LOXYS Solutions Informatiques</div>
-          <div class="mcard-desc">Technicien informaticien : support client et réparation de PC au quotidien, déploiement réseau événementiel pour le festival The N'Joy.</div>
+          <div class="mcard-desc">Technicien informaticien : support client et réparation de PC au quotidien, déploiement réseau événementiel pour le festival The N'Joy, serveur de téléphonie IP Wazo.</div>
         </div>
         <div class="mcard-bot">
           <div class="mcard-tags">
@@ -632,6 +632,11 @@ footer{background:var(--blue);color:rgba(255,255,255,.4);padding:36px 48px;text-
       <a class="rcard reveal" href="realisations/stage-evenementiel.html"><div class="rcard-n">Juin 2026</div><div class="rcard-t">Déploiement réseau événementiel</div><div class="rcard-d">Festival de Poupet et Canon français : baies, bornes WiFi, fibre.</div><div class="rcard-c">5.2</div></a>
     </div>
 
+    <h3 class="rgroup reveal">Alternance — LOXYS Solutions Informatiques (depuis le 01/09/2026)</h3>
+    <div class="real-grid">
+      <a class="rcard reveal" href="realisations/alternance-wazo.html"><div class="rcard-n">Oct. 2026</div><div class="rcard-t">Serveur de téléphonie IP Wazo</div><div class="rcard-d">VM Debian 12, wazo-ansible, softphones de test, agent Zabbix.</div><div class="rcard-c">1.4 · 5.1 · 5.2</div></a>
+    </div>
+
     <h3 class="rgroup reveal">Formation — 2e année</h3>
     <div class="real-grid">
       <a class="rcard reveal" href="realisations/axesy-multisite.html"><div class="rcard-n">Évaluation · oct. 2026</div><div class="rcard-t">Plateforme web multi-site sécurisée</div><div class="rcard-d">Debian, Apache2, .htpasswd, Bind9 et plan de recette.</div><div class="rcard-c">1.3 · 5.1 · 5.2</div></a>
@@ -655,8 +660,8 @@ footer{background:var(--blue);color:rgba(255,255,255,.4);padding:36px 48px;text-
     <div class="veille-grid">
       <div class="vcard reveal">
         <div class="vcard-date">Organisation</div>
-        <div class="vcard-title">Feedly, Google Alertes et un rythme fixe</div>
-        <div class="vcard-desc">Trois rubriques (outils de supervision, agents IA, sécurité et réglementation), un tri chaque semaine et un journal mis à jour chaque mois.</div>
+        <div class="vcard-title">Google Alertes en place, Feedly à configurer</div>
+        <div class="vcard-desc">Quatre alertes hebdomadaires depuis le 19/10/2026 (Zabbix, AIOps, Zabbix MCP, supervision IA). Trois rubriques : outils de supervision, agents IA, sécurité et réglementation.</div>
       </div>
       <div class="vcard reveal">
         <div class="vcard-date">Synthèse — octobre 2026</div>
@@ -690,7 +695,7 @@ footer{background:var(--blue);color:rgba(255,255,255,.4);padding:36px 48px;text-
       <div class="vcard reveal">
         <div class="vcard-date">Matériel</div>
         <div class="vcard-title">Montage et évolution de PC</div>
-        <div class="vcard-desc">J'ai monté mon premier PC entre 15 et 17 ans, puis un PC pour quelqu'un d'autre. Je fais évoluer moi-même mon PC gaming (mémoire, processeur, carte graphique) en vérifiant la compatibilité de chaque pièce.</div>
+        <div class="vcard-desc">J'ai monté mon premier PC entre 15 et 17 ans, puis un PC pour quelqu'un d'autre. Je fais évoluer moi-même mon PC gaming : prochaine étape, le passage à 16 Go de mémoire vive.</div>
         <div class="vcard-tags"><span class="vcard-tag">Montage</span><span class="vcard-tag">Diagnostic</span></div>
       </div>
       <div class="vcard reveal">
@@ -976,13 +981,12 @@ app = Flask(__name__)
         </ul>
         <p><a href="realisations/axesy-multisite.html" style="color:var(--accent);font-weight:600">Voir la réalisation Axesy →</a></p>
         <p style="margin-top:18px"><strong>Sauvegarde automatisée — Novaxis</strong> (octobre 2026)</p>
-        <p>Demande client : sauvegarder chaque jour le site web et la base « overdata » vers un serveur externe, pour pouvoir restaurer après une perte ou un crash, sans gêner les employés.</p>
+        <p>Demande client : sauvegarder le site web et la base « overdata » vers un serveur externe, pour retrouver les données après une erreur humaine ou une panne, sans gêner les employés.</p>
         <ul>
-          <li><strong>Sauvegarde</strong> — export de la base avec mysqldump et copie du site, lancés par cron chaque soir à 22h30</li>
-          <li><strong>Transfert sécurisé</strong> — scp avec authentification par clé SSH, utilisateur dédié sans accès root</li>
-          <li><strong>Sécurité</strong> — mot de passe MySQL sorti de la commande (fichier .my.cnf en droits 600), dossier de sauvegarde à droits restreints</li>
-          <li><strong>Restauration</strong> — réimport du fichier .sql avec mysql</li>
-          <li><strong>Évolutions identifiées</strong> — chiffrement des sauvegardes, rotation sur 7 jours, alerte e-mail en cas d'échec</li>
+          <li><strong>Dossier de choix technique</strong> — acteurs, fonctionnalités attendues, exigences de qualité de service et de sécurité, solution et argumentaire</li>
+          <li><strong>Solution envisagée</strong> — un script lance chaque jour, hors des heures de travail, la sauvegarde de la base et du site, envoyée automatiquement par SSH vers un serveur externe qui garde plusieurs jours de sauvegardes</li>
+          <li><strong>Mise en œuvre en TP (en cours)</strong> — avec les outils vus en cours : mysqldump, scp par clé SSH, script shell et crontab</li>
+          <li><strong>Évolutions envisagées</strong> — alerte par e-mail en cas d'échec, copie sur un deuxième serveur externe, doublement du serveur web</li>
         </ul>
         <p><a href="realisations/novaxis-sauvegarde.html" style="color:var(--accent);font-weight:600">Voir la réalisation Novaxis →</a></p>
         <p><strong>Technologies</strong></p>
@@ -1021,15 +1025,15 @@ app = Flask(__name__)
           <li><strong>Contexte</strong> — artisan pâtissier qui regroupe atelier et siège dans de nouveaux locaux, accompagné par l'ESN de l'école, SIOExpert</li>
           <li><strong>Réalisations</strong> — un VLAN par service (Production, Marketing, Commercial), liaison série entre deux routeurs, adressage DHCP, serveur Active Directory avec UO et comptes managers / employés</li>
         </ul>
-        <p style="margin-top:18px"><strong>Gestion de projet — cas Almeria / Serrurerie Papin</strong> (en binôme, en cours)</p>
+        <p style="margin-top:18px"><strong>Gestion de projet — cas Almeria / Serrurerie Papin</strong> (en cours)</p>
         <ul>
           <li><strong>Organisation</strong> — rôles du projet (chef de projet, comité de pilotage, jalons, livrables) et étapes de l'avant-projet à la clôture</li>
-          <li><strong>Risques</strong> — classement par type, probabilité et gravité, avec mesures préventives et correctives</li>
-          <li><strong>Planification</strong> — découpage des tâches et matrice RACI pour coordonner les acteurs</li>
+          <li><strong>Risques</strong> — risques client, commercial et informatique, avec des mesures proposées (échéances, concertation avec le client, sécurisation du site, sauvegardes)</li>
+          <li><strong>Suite du cas</strong> — planification avec une matrice RACI, suivi et clôture du projet</li>
         </ul>
         <p style="margin-top:18px"><strong>Autres études de cas</strong></p>
         <ul>
-          <li><strong>AS Quatre Champs</strong> — analyse des besoins d'un club de basket pour faire évoluer son organisation numérique, présentée à l'oral en équipe</li>
+          <li><strong>AS Quatre Champs</strong> — analyse des besoins d'un club de basket pour faire évoluer son organisation numérique, avec une présentation orale en équipe</li>
           <li><strong>Cas SCF (CEJM)</strong> — champ d'application du RGPD sur une base de données de fournisseurs étrangers</li>
         </ul>
         <p><strong>Technologies et méthodes</strong></p>
@@ -1053,6 +1057,7 @@ app = Flask(__name__)
       <div class="modal-tabs">
         <button class="mtab active" data-tab="support">Support</button>
         <button class="mtab" data-tab="njoy">Festival N'Joy</button>
+        <button class="mtab" data-tab="wazo">Téléphonie IP</button>
       </div>
     </div>
     <div class="modal-body">
@@ -1063,6 +1068,7 @@ app = Flask(__name__)
           <li><strong>Réparation de PC</strong> — diagnostic et remise en état de postes clients, côté matériel comme logiciel</li>
           <li><strong>Support client</strong> — 1 à 3 interventions par jour, en atelier ou chez le client, sur des demandes reçues par e-mail et par téléphone ; la panne la plus fréquente : les PC lents</li>
           <li><strong>Microsoft 365</strong> — tâches d'administration Microsoft 365</li>
+          <li><strong>Téléphonie IP</strong> — installation d'un serveur Wazo Platform pour LOXYS (voir l'onglet Téléphonie IP)</li>
         </ul>
         <p><strong>Technologies</strong></p>
         <div class="mtagrow">
@@ -1079,6 +1085,22 @@ app = Flask(__name__)
         <p><strong>Technologies</strong></p>
         <div class="mtagrow">
           <span class="mtag">WiFi</span><span class="mtag">UniFi</span><span class="mtag">Réseau événementiel</span>
+        </div>
+      </div>
+      <div class="mpane" data-pane="wazo">
+        <p>Pour LOXYS, j'ai monté un serveur de téléphonie sur IP (IPBX) avec <strong>Wazo Platform</strong>, une solution open source.</p>
+        <p><strong>Réalisations</strong></p>
+        <ul>
+          <li><strong>Machine virtuelle</strong> — VM Debian 12 créée sur l'infrastructure VMware de LOXYS</li>
+          <li><strong>Installation</strong> — déploiement de Wazo Platform avec wazo-ansible</li>
+          <li><strong>Configuration</strong> — contexte interne avec la plage de numéros 1000 à 1099 et utilisateurs de test</li>
+          <li><strong>Tests</strong> — comptes de test sur trois softphones : MicroSIP, Linphone et Zoiper</li>
+          <li><strong>Supervision</strong> — agent Zabbix 7.4 installé sur la VM</li>
+        </ul>
+        <p><a href="realisations/alternance-wazo.html" style="color:var(--accent);font-weight:600">Voir la réalisation Wazo →</a></p>
+        <p><strong>Technologies</strong></p>
+        <div class="mtagrow">
+          <span class="mtag">Wazo Platform</span><span class="mtag">Debian 12</span><span class="mtag">VMware</span><span class="mtag">Ansible</span><span class="mtag">VoIP / SIP</span><span class="mtag">Zabbix</span>
         </div>
       </div>
     </div>
