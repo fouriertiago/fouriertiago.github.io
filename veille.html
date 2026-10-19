@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veille : l&#x27;IA appliquée à la supervision — Tiago Fourier</title>
+<meta name="description" content="Veille informationnelle BTS SIO sur l&#x27;IA appliquée à la supervision des infrastructures (AIOps).">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/page.css">
+</head>
+<body>
+<nav class="pnav">
+  <a href="index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <ul class="pnav-links">
+    <li class="hide-m"><a href="index.html#parcours">Parcours</a></li>
+    <li><a href="index.html#realisations">Réalisations</a></li>
+    <li><a href="competences.html">Tableau E4</a></li>
+    <li><a href="veille.html">Veille</a></li>
+  </ul>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="index.html">Accueil</a> › Veille informationnelle</div>
+<div class="peyebrow">Veille informationnelle — Organiser son développement professionnel</div>
+<h1 class="ptitle">L'IA appliquée à la supervision des infrastructures</h1>
+<p class="plead">Peut-on confier le diagnostic des incidents à une intelligence artificielle, et avec quelles garanties ? Je suis ce sujet depuis mon projet de stage, où j'ai relié un agent IA à Zabbix.</p>
+<div class="meta"><span class="chip"><b>Sujet</b>AIOps : IA + supervision</span><span class="chip"><b>Période suivie</b>2026 – mars 2027</span><span class="chip"><b>Dernière mise à jour</b>octobre 2026</span></div>
+<div class="toc"><a href="#sujet">Sujet</a><a href="#veille-opnsense">Point de départ</a><a href="#organisation">Organisation</a><a href="#sources">Sources</a><a href="#journal">Journal</a><a href="#synthese">Synthèse</a><a href="#apports">Ce que j'en retiens</a></div>
+</div></header>
+<main class="pbody">
+
+<section class="block" id="sujet"><h2>Mon sujet et pourquoi je l'ai choisi</h2>
+<p>L'<strong>AIOps</strong> (<em>Artificial Intelligence for IT Operations</em>) désigne l'utilisation de l'IA pour exploiter les infrastructures : corréler les alertes, trouver la cause d'un incident, proposer ou déclencher une action.</p>
+<p>J'ai choisi ce sujet pour trois raisons :</p>
+<ul>
+<li><strong>Mon projet de stage</strong> — chez LOXYS, j'ai construit une chaîne <a href="realisations/stage-supervision-ia.html">Zabbix → agent IA Flowise → e-mail de diagnostic</a>. Je veux savoir si ce que j'ai bricolé correspond à ce que fait le marché.</li>
+<li><strong>Mes cours</strong> — Zabbix revient en 2e année, dans le PPE sur la qualité de service où je m'occupe de la supervision.</li>
+<li><strong>Mon métier visé</strong> — administrateur systèmes et réseaux : la supervision fait partie du quotidien, et l'IA est en train de la transformer.</li>
+</ul>
+<p><strong>Mes trois rubriques :</strong> les outils de supervision et leurs nouveautés ; les agents IA appliqués aux incidents ; la sécurité et la réglementation de ces usages.</p>
+</section>
+
+<section class="block" id="veille-opnsense"><h2>Point de départ : la veille OPNsense du stage</h2>
+<p>Ma première veille a été ponctuelle, pendant le stage (26/05 – 03/07/2026). Je ne connaissais pas OPNsense et je devais créer un portail captif avec. Je me suis appuyé sur le tutoriel d'<a href="https://www.it-connect.fr/tuto-installer-et-configurer-opnsense/" target="_blank" rel="noopener">IT-Connect</a> pour comprendre l'installation, les interfaces WAN/LAN et la logique des règles de pare-feu, puis je l'ai appliqué au <a href="realisations/stage-portail-captif.html">portail captif de LOXYS</a>.</p>
+<p>C'était une recherche à la demande (méthode <em>pull</em>). Cette expérience m'a montré qu'il fallait passer à une veille régulière, organisée dans la durée : c'est l'objet de la suite de cette page.</p>
+</section>
+
+<section class="block" id="organisation"><h2>Mon organisation de veille</h2>
+<h3>Outils</h3>
+<div class="tw"><table><tr><th>Outil</th><th>Méthode</th><th>Utilisation</th></tr>
+<tr><td>Feedly</td><td>Push</td><td>Agrégateur de flux RSS, une catégorie par rubrique : je lis tout au même endroit, sans encombrer ma boîte mail.</td></tr>
+<tr><td>Google Alertes</td><td>Push</td><td>Alertes sur « Zabbix », « AIOps », « supervision IA », « Zabbix MCP » : je suis prévenu quand un nouvel article sort ailleurs que dans mes sources.</td></tr>
+<tr><td>Forum et blog Zabbix</td><td>Push</td><td>Annonces officielles et projets de la communauté.</td></tr>
+<tr><td>Moteur de recherche</td><td>Pull</td><td>Recherches ciblées pour vérifier ou approfondir une information.</td></tr>
+<tr><td>Assistant IA</td><td>Pull</td><td>Uniquement pour trouver des pistes ou résumer un long document ; chaque information est ensuite vérifiée sur la source d'origine.</td></tr></table></div>
+<h3>Rythme</h3>
+<ul>
+<li><strong>Chaque semaine</strong> — 30 minutes pour trier Feedly et les alertes : je garde, j'écarte ou je mets de côté.</li>
+<li><strong>Chaque mois</strong> — j'ajoute les articles retenus au journal ci-dessous avec un résumé et ce qu'ils m'apprennent.</li>
+<li><strong>Mars 2027</strong> — synthèse finale mise à jour pour l'épreuve.</li>
+</ul>
+<h3>Comment je trie une information</h3>
+<ul>
+<li><strong>Source</strong> — éditeur officiel, organisme public, média spécialisé ou publication de recherche ; un blog commercial est recoupé avant d'être retenu.</li>
+<li><strong>Date</strong> — récente, ou toujours valable si elle est plus ancienne.</li>
+<li><strong>Auteur</strong> — identifié.</li>
+<li><strong>Recoupement</strong> — confirmée par au moins une autre source.</li>
+<li><strong>Pertinence</strong> — liée à mes rubriques et utilisable dans mon travail.</li>
+</ul>
+<h3>Usage raisonné de l'IA</h3>
+<p>Une requête à une IA générative consomme beaucoup plus d'énergie qu'une recherche classique. Je réserve donc l'IA aux tâches où elle apporte vraiment quelque chose, et j'utilise le moteur de recherche pour les vérifications simples.</p>
+</section>
+
+<section class="block" id="sources"><h2>Sources retenues et écartées</h2>
+<div class="tw"><table><tr><th>Source</th><th>Rubrique</th><th>Pourquoi je la garde</th></tr>
+<tr><td><a href="https://blog.zabbix.com/" target="_blank" rel="noopener">Blog Zabbix</a> et <a href="https://www.zabbix.com/forum/" target="_blank" rel="noopener">forum Zabbix</a></td><td>Outils</td><td>Source officielle de l'éditeur que j'utilise, avec des retours d'expérience d'administrateurs.</td></tr>
+<tr><td><a href="https://www.it-connect.fr/" target="_blank" rel="noopener">IT-Connect</a></td><td>Outils</td><td>Tutoriels techniques en français, datés et signés, que j'ai déjà mis en pratique.</td></tr>
+<tr><td><a href="https://www.journaldunet.com/" target="_blank" rel="noopener">Journal du Net</a></td><td>Agents IA</td><td>Vision marché et vulgarisation, utile pour situer les tendances.</td></tr>
+<tr><td><a href="https://cyber.gouv.fr/" target="_blank" rel="noopener">ANSSI</a></td><td>Sécurité</td><td>Référence officielle française en cybersécurité.</td></tr>
+<tr><td><a href="https://arxiv.org/" target="_blank" rel="noopener">arXiv</a></td><td>Agents IA</td><td>Publications de recherche, avec des mesures chiffrées plutôt que des promesses.</td></tr>
+<tr><td><a href="https://www.blogdumoderateur.com/" target="_blank" rel="noopener">Blog du Modérateur</a></td><td>Réglementation</td><td>Suivi clair et daté de l'actualité réglementaire du numérique.</td></tr></table></div>
+<p><strong>Sources écartées :</strong> les pages « Qu'est-ce que l'AIOps ? » des éditeurs de logiciels de supervision. Elles sont surtout commerciales, rarement datées, et présentent toujours leur produit comme la solution.</p>
+</section>
+
+<section class="block" id="journal"><h2>Journal de veille</h2>
+<div class="tw"><table><tr><th>Date</th><th>Source</th><th>Ce que j'en retiens</th></tr>
+<tr><td>Oct. 2026</td><td><a href="https://hub.docker.com/r/zabbix/zabbix-mcp-server" target="_blank" rel="noopener">Docker Hub — image officielle zabbix-mcp-server</a></td><td>Zabbix publie son propre serveur MCP (version 8.0) : un agent IA peut consulter les hôtes et les problèmes, mais aussi acquitter, fermer des problèmes et gérer des maintenances. Chaque requête utilise le jeton de l'utilisateur et apparaît dans le journal d'audit. Les outils d'écriture sont <strong>activés par défaut</strong> : à restreindre avant toute mise en production.</td></tr>
+<tr><td>29/07/2026</td><td><a href="https://www.blogdumoderateur.com/ia-act-2-aout-2026/" target="_blank" rel="noopener">Blog du Modérateur — AI Act, 2 août 2026</a></td><td>Les obligations de transparence entrent en application le 2 août 2026 : un utilisateur doit savoir qu'il échange avec une IA. Le Digital Omnibus repousse les obligations des systèmes à haut risque à décembre 2027 et août 2028.</td></tr>
+<tr><td>09/06/2026</td><td><a href="https://blog.zabbix.com/exploring-ai-integration-in-zabbix-with-gemini-and-webmcp/" target="_blank" rel="noopener">Blog Zabbix — IA, Gemini et WebMCP</a></td><td>Un spécialiste supervision interroge Zabbix en langage naturel via MCP. Ses conseils : commencer en lecture seule, l'agent ne voit que ce que permet le rôle de l'utilisateur, et le serveur MCP doit lui-même être supervisé.</td></tr>
+<tr><td>29/05/2026</td><td><a href="https://www.zabbix.com/pr/pr850" target="_blank" rel="noopener">Zabbix — annonce de Zabbix 8.0 LTS</a></td><td>L'IA est l'un des quatre piliers de Zabbix 8.0 LTS, avec le traitement d'événements complexes, la supervision applicative et la montée en charge. Sortie prévue au dernier trimestre 2026.</td></tr>
+<tr><td>02/04/2026</td><td><a href="https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/512326-zabbix-mcp-server-%E2%80%94-manage-zabbix-with-ai-assistants-open-source" target="_blank" rel="noopener">Forum Zabbix — serveur MCP open source</a></td><td>Un projet communautaire relie les assistants IA à l'API Zabbix. Lecture seule par défaut, authentification par jeton, liste d'IP autorisées, et validation en deux étapes pour les actions d'écriture.</td></tr>
+<tr><td>01/04/2026</td><td><a href="https://www.it-connect.fr/zabbix-le-guide-complet-pour-bien-debuter-sa-supervision-linux-windows/" target="_blank" rel="noopener">IT-Connect — guide complet Zabbix 7.4</a></td><td>Installation, agents Linux et Windows, déclencheurs, alertes vers GLPI et tableaux de bord : la base solide sans laquelle une IA n'a rien de fiable à analyser.</td></tr>
+<tr><td>20/02/2026</td><td><a href="https://www.journaldunet.com/cloud/1548027-aiops-quand-l-intelligence-artificielle-prend-les-commandes-des-operations-it/" target="_blank" rel="noopener">Journal du Net — AIOps</a></td><td>AIOps = IA + observabilité + automatisation. Promesses : moins de bruit d'alertes et un temps de résolution jusqu'à 60 % plus court dans les organisations matures, mais l'humain reste superviseur.</td></tr>
+<tr><td>29/04/2024</td><td><a href="https://www.it-connect.fr/securite-ia-generative-guide-anssi-2024/" target="_blank" rel="noopener">IT-Connect — guide ANSSI sur l'IA générative</a></td><td>35 recommandations : cloisonner le système d'IA, journaliser et filtrer ses accès ; les extensions qui donnent des capacités à l'IA représentent un risque majeur.</td></tr>
+<tr><td>07/03/2024</td><td><a href="https://arxiv.org/abs/2403.04123" target="_blank" rel="noopener">arXiv — agents LLM et analyse de cause racine (Microsoft)</a></td><td>Un agent qui interroge de vrais outils hallucine beaucoup moins (environ 4 %) qu'un modèle qui répond seul, mais ne trouve la bonne cause que dans environ 35 % des cas et échoue sur les incidents complexes.</td></tr></table></div>
+</section>
+
+<section class="block" id="synthese"><h2>Synthèse — octobre 2026</h2>
+<h3>1. L'IA entre dans les outils de supervision eux-mêmes</h3>
+<p>En juin 2026, j'ai dû écrire un webhook et des outils sur mesure pour relier Zabbix à un agent IA. Quelques mois plus tard, Zabbix fait de l'IA un pilier de sa version 8.0 et publie un serveur MCP officiel. Le protocole MCP devient le standard pour brancher un assistant IA sur un outil : ce que j'ai construit à la main se standardise.</p>
+<h3>2. La sécurité repose sur le moindre privilège</h3>
+<p>Toutes les sources sérieuses convergent : lecture seule par défaut, droits limités au rôle de l'utilisateur, traçabilité des actions, cloisonnement. C'est le principe que j'avais appliqué avec le compte SSH restreint de mon agent. Point de vigilance : le serveur MCP officiel active les actions d'écriture par défaut, il faut donc le configurer avant de l'utiliser.</p>
+<h3>3. L'IA aide au diagnostic, elle ne le remplace pas</h3>
+<p>Les mesures de Microsoft confirment ce que j'ai vu en stage : un agent qui ne consulte pas les vraies données invente des réponses, et même bien outillé il échoue sur les incidents complexes. L'humain garde la décision, surtout pour les actions qui modifient le système.</p>
+<h3>4. Le cadre réglementaire se précise</h3>
+<p>L'AI Act impose la transparence depuis août 2026, et l'ANSSI publie des recommandations concrètes pour sécuriser ces systèmes. Un projet AIOps en entreprise doit intégrer ces règles dès sa conception.</p>
+</section>
+
+<section class="block" id="apports"><h2>Ce que cette veille m'apporte</h2>
+<ul>
+<li><strong>Prendre du recul sur mon projet de stage</strong> — si je le refaisais, j'utiliserais le serveur MCP de Zabbix en lecture seule plutôt que des outils écrits à la main, et je stockerais la clé SSH dans un coffre de secrets.</li>
+<li><strong>Un réflexe de sécurité</strong> — avant de brancher une IA sur un système : quels droits, quelle trace, qui valide l'action ?</li>
+<li><strong>Une méthode</strong> — trier les sources, dater et recouper l'information, plutôt que de faire confiance au premier résultat.</li>
+</ul>
+<h3>Suite prévue jusqu'en mars 2027</h3>
+<ul>
+<li>Suivre la sortie officielle de Zabbix 8.0 LTS et ses fonctions d'IA.</li>
+<li>Tester un serveur MCP Zabbix en lecture seule sur une machine virtuelle.</li>
+<li>Mettre à jour cette synthèse avec les articles retenus d'ici mars 2027.</li>
+</ul>
+</section>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="index.html">Retour au portfolio</a></footer>
+</body>
+</html>
