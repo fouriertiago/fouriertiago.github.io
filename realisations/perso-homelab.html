@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homelab domotique Home Assistant — Tiago Fourier</title>
+<meta name="description" content="Projet personnel : un Raspberry Pi 5 sous Home Assistant qui pilote ma chambre et mon PC, avec accès distant sécurisé, DNS filtrant, sauvegardes chiffrées hors site et double authentification.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#F6F8FC">
+<script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='dark'&&t!=='light'){t=d.getAttribute('data-theme')}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.setAttribute('data-theme',t)})();</script>
+<link rel="stylesheet" href="../assets/page.css">
+<script src="../assets/site.js" defer></script>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<nav class="pnav">
+  <a href="../index.html" class="pnav-logo">Tiago<span> Fourier</span></a>
+  <div class="pnav-right"><ul class="pnav-links">
+    <li class="hide-m"><a href="../index.html#parcours">Parcours</a></li>
+    <li><a href="../index.html#realisations">Réalisations</a></li>
+    <li><a href="../competences.html">Tableau E5</a></li>
+    <li><a href="../veille.html">Veille</a></li>
+  </ul><button class="icon-btn" type="button" data-theme-toggle aria-label="Changer de thème"><svg class="i theme-ic-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i theme-ic-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></div>
+</nav>
+<header class="phead"><div class="phead-inner">
+<div class="crumb"><a href="../index.html">Accueil</a> › <a href="../index.html#projets-perso">Projets personnels</a> › Homelab domotique</div>
+<div class="peyebrow">Projet personnel — Environnement d'apprentissage</div>
+<h1 class="ptitle">Homelab domotique : Home Assistant sur Raspberry Pi 5</h1>
+<p class="plead">Monter chez moi un petit système d'information complet : un serveur Home Assistant qui pilote ma chambre et mon PC à distance, avec un DNS filtrant, un accès distant sécurisé, des sauvegardes chiffrées hors site et une double authentification.</p>
+<div class="meta"><span class="chip"><b>Période</b>Depuis septembre 2026</span><span class="chip"><b>Cadre</b>Projet personnel</span><span class="chip"><b>Matériel</b>Raspberry Pi 5 · Home Assistant OS</span><span class="chip ok">En service · en évolution</span></div>
+<div class="toc"><a href="#contexte">Contexte</a><a href="#architecture">Architecture</a><a href="#realisation">Réalisation</a><a href="#securite">Sécurité et continuité</a><a href="#tests">Tests</a><a href="#difficultes">Difficultés</a><a href="#methode">Méthode</a><a href="#suite">Évolutions</a><a href="#competences">Compétences E5</a><a href="#preuves">Preuves</a></div>
+</div></header>
+<main class="pbody">
+<section class="block" id="contexte"><h2>Contexte et objectifs</h2>
+<p>Je voulais piloter ma chambre et mon setup depuis mon téléphone et à la voix, et surtout pouvoir <strong>allumer et éteindre mon PC à distance</strong> pour travailler dessus de n'importe où. J'en ai fait un terrain d'entraînement : traiter ce serveur comme un vrai service, avec les mêmes exigences qu'en entreprise.</p>
+<ul>
+<li><strong>Piloter</strong> — lumière, TV, écran et PC depuis l'iPhone (application et widget) et par Google Assistant.</li>
+<li><strong>Ne jamais éteindre le PC par erreur</strong> — toute extinction doit être validée par une notification sur mon iPhone.</li>
+<li><strong>Accéder à distance en sécurité</strong> — HTTPS avec certificat, VPN, double authentification.</li>
+<li><strong>Protéger le réseau</strong> — un DNS qui bloque publicités et traqueurs.</li>
+<li><strong>Ne rien perdre</strong> — des sauvegardes automatiques, chiffrées, dont une copie hors du Raspberry Pi.</li>
+</ul>
+</section>
+<section class="block" id="architecture"><h2>Architecture</h2>
+<p>Le Raspberry Pi est posé près de la Freebox, dans une autre pièce que ma chambre. Survolez ou touchez un élément du schéma pour afficher son rôle.</p>
+<div class="lab-map"><svg viewBox="0 0 720 470" role="group" aria-label="Schéma du homelab : cliquez sur un élément pour le détail">
+<defs>
+<symbol id="hp-phone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></g></symbol>
+<symbol id="hp-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></g></symbol>
+<symbol id="hp-cloud" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.34 9.5 4 4 0 0 0 7 19z"/><path d="M12 16v-5M9.5 13.5 12 11l2.5 2.5"/></g></symbol>
+<symbol id="hp-router" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 16.5h.01M11 16.5h.01M8 9a6 6 0 0 1 8 0M5.5 6.5a9.5 9.5 0 0 1 13 0"/></g></symbol>
+<symbol id="hp-chip" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><rect x="10" y="10" width="4" height="4"/></g></symbol>
+<symbol id="hp-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></g></symbol>
+<symbol id="hp-plug" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"/><path d="M12 18v4"/></g></symbol>
+<symbol id="hp-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></g></symbol>
+</defs>
+<path class="lnk" d="M195 53 H272"/>
+<path class="flowl c2" d="M195 53 H272"/>
+<text class="ltxt" x="210" y="46">HTTPS</text>
+<path class="lnk" d="M448 53 H525"/>
+<path class="flowl g" d="M448 53 H525"/>
+<text class="ltxt" x="462" y="46">chiffré</text>
+<path class="lnk" d="M360 82 V150"/>
+<path class="flowl " d="M360 82 V150"/>
+<text class="ltxt" x="366" y="120">fibre</text>
+<path class="lnk" d="M330 208 V236 H136 V262"/>
+<path class="flowl " d="M330 208 V236 H136 V262"/>
+<text class="ltxt" x="150" y="230">LAN · DNS</text>
+<path class="lnk" d="M390 208 V236 H595 V262"/>
+<path class="flowl c2" d="M390 208 V236 H595 V262"/>
+<text class="ltxt" x="530" y="230">Wi-Fi</text>
+<path class="lnk" d="M252 294 H490"/>
+<path class="flowl v" d="M252 294 H490"/>
+<text class="ltxt" x="350" y="288">MQTT</text>
+<path class="lnk" d="M136 382 V402"/>
+<path class="flowl a" d="M136 382 V402"/>
+<text class="ltxt" x="144" y="396">Tuya · Cast</text>
+<path class="lnk" d="M252 350 H370 V428 H490"/>
+<path class="flowl a" d="M252 350 H370 V428 H490"/>
+<text class="ltxt" x="378" y="372">HomeKit</text>
+<path class="lnk" d="M595 402 V326"/>
+<path class="flowl g" d="M595 402 V326"/>
+<text class="ltxt" x="602" y="370">courant</text>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Pilotage" data-t="iPhone — application et widget" data-d="Application Home Assistant et widget d&#x27;écran d&#x27;accueil à 8 commandes : Tout allumer, Tout couper, Mode jeu, PC, Écran, Télé, Lumière, Mode couleur. Les notifications servent aussi à valider les extinctions et la double authentification.">
+<rect class="bx" x="20" y="24" width="175" height="58" rx="12"/>
+<use href="#hp-phone" class="ni" x="34" y="42" width="22" height="22"/>
+<text class="nt" x="66" y="51">iPhone</text>
+<text class="ns" x="66" y="66">appli + widget</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Accès distant" data-t="Accès sécurisé depuis l&#x27;extérieur" data-d="Accès HTTPS via un nom DuckDNS et un certificat Let&#x27;s Encrypt, Tailscale pour un accès VPN, et commande vocale par Google Assistant, sans abonnement Nabu Casa.">
+<rect class="bx" x="272" y="24" width="176" height="58" rx="12"/>
+<use href="#hp-globe" class="ni" x="286" y="42" width="22" height="22"/>
+<text class="nt" x="318" y="51">Accès distant</text>
+<text class="ns" x="318" y="66">HTTPS · Tailscale</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Continuité" data-t="Sauvegarde hors site" data-d="Sauvegarde automatique chaque nuit, chiffrée, gardée en 3 versions sur le Pi et sur Google Drive. Sauvegarde test validée le 28/10/2026. À terme, elle partira vers mon NAS.">
+<rect class="bx" x="525" y="24" width="175" height="58" rx="12"/>
+<use href="#hp-cloud" class="ni" x="539" y="42" width="22" height="22"/>
+<text class="nt" x="571" y="51">Google Drive</text>
+<text class="ns" x="571" y="66">copie hors site</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Réseau" data-t="Box fibre — réseau local" data-d="Bail DHCP statique pour que le Raspberry Pi garde toujours la même adresse, et redirection de port pour l&#x27;accès HTTPS distant.">
+<rect class="bx" x="272" y="150" width="176" height="58" rx="12"/>
+<use href="#hp-router" class="ni" x="286" y="168" width="22" height="22"/>
+<text class="nt" x="318" y="177">Freebox Delta</text>
+<text class="ns" x="318" y="192">fibre · DHCP</text>
+</g>
+<g class="node core" tabindex="0" role="button" aria-pressed="false" data-k="Cœur du homelab" data-t="Raspberry Pi 5 — Home Assistant OS" data-d="Installé le 14/09/2026. Modules : AdGuard Home (DNS qui bloque pubs et traqueurs), Mosquitto (MQTT), éditeur de fichiers. Connexion protégée par double authentification sur l&#x27;iPhone.">
+<rect class="pulse" x="20" y="262" width="232" height="120" rx="14"/>
+<rect class="bx" x="20" y="262" width="232" height="120" rx="12"/>
+<use href="#hp-chip" class="ni" x="34" y="277" width="22" height="22"/>
+<text class="nt" x="66" y="286">Raspberry Pi 5</text>
+<text class="ns" x="66" y="301">Home Assistant OS</text>
+<circle cx="40" cy="322" r="3" fill="var(--green)"/>
+<text class="ns" x="52" y="326">AdGuard Home · DNS filtrant</text>
+<circle cx="40" cy="340" r="3" fill="var(--green)"/>
+<text class="ns" x="52" y="344">Mosquitto · MQTT</text>
+<circle cx="40" cy="358" r="3" fill="var(--green)"/>
+<text class="ns" x="52" y="362">Sauvegardes · MFA</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Poste piloté" data-t="PC gaming" data-d="HASS.Agent remonte l&#x27;état et la charge du CPU, du GPU et de la RAM, et reçoit l&#x27;ordre d&#x27;extinction par MQTT. RustDesk et Tailscale permettent d&#x27;en prendre le contrôle à distance.">
+<rect class="bx" x="490" y="262" width="210" height="64" rx="12"/>
+<use href="#hp-monitor" class="ni" x="504" y="283" width="22" height="22"/>
+<text class="nt" x="536" y="292">PC gaming</text>
+<text class="ns" x="536" y="307">HASS.Agent · RustDesk</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Énergie" data-t="Multiprise connectée Meross MSS425F" data-d="Intégrée en HomeKit : une prise pour la TV, une pour l&#x27;écran, une pour le PC. Couper puis remettre le courant du PC le démarre, grâce au réglage BIOS « AC Back ».">
+<rect class="bx" x="490" y="402" width="210" height="52" rx="12"/>
+<use href="#hp-plug" class="ni" x="504" y="417" width="22" height="22"/>
+<text class="nt" x="536" y="426">Multiprise Meross</text>
+<text class="ns" x="536" y="441">TV · écran · PC</text>
+</g>
+<g class="node" tabindex="0" role="button" aria-pressed="false" data-k="Scénarios" data-t="Appareils de la chambre" data-d="Ampoule LSC (Tuya), Google Home Mini et TV Android. Scénarios : Tout allumer, Mode jeu (écran et PC, sans la TV), Tout couper avec validation.">
+<rect class="bx" x="20" y="402" width="232" height="52" rx="12"/>
+<use href="#hp-bulb" class="ni" x="34" y="417" width="22" height="22"/>
+<text class="nt" x="66" y="426">Chambre</text>
+<text class="ns" x="66" y="441">ampoule · TV · Google Home</text>
+</g>
+</svg></div>
+<div class="lab-panel" id="lab-panel" aria-live="polite"><div class="k">Cœur du homelab</div><h3>Raspberry Pi 5 — Home Assistant OS</h3><p>Installé le 14/09/2026. Modules : AdGuard Home (DNS qui bloque pubs et traqueurs), Mosquitto (MQTT), éditeur de fichiers. Connexion protégée par double authentification sur l&#x27;iPhone.</p></div>
+<h3>Composants</h3>
+<div class="tw"><table>
+<tr><th>Élément</th><th>Rôle</th><th>Intégration</th></tr>
+<tr><td>Raspberry Pi 5 (4 Go, microSD)</td><td>Serveur Home Assistant OS</td><td>Adresse fixe par bail DHCP statique sur la Freebox</td></tr>
+<tr><td>AdGuard Home</td><td>DNS filtrant du réseau</td><td>Module Home Assistant, DNS du PC réglé dessus</td></tr>
+<tr><td>Mosquitto</td><td>Messagerie MQTT entre le Pi et le PC</td><td>Module Home Assistant, utilisateur dédié</td></tr>
+<tr><td>HASS.Agent 2.2.1</td><td>État du PC, capteurs, commande d'extinction</td><td>Installé sur le PC, relié en MQTT</td></tr>
+<tr><td>Multiprise Meross MSS425F</td><td>Prises TV, écran et PC</td><td>HomeKit</td></tr>
+<tr><td>Ampoule LSC Smart Connect</td><td>Lumière blanche ou couleur</td><td>Tuya (Tuya Developer Platform)</td></tr>
+<tr><td>Google Home Mini, TV Android</td><td>Voix, multimédia</td><td>Google Cast, Android TV</td></tr>
+<tr><td>Tailscale, RustDesk</td><td>VPN et prise en main du PC à distance</td><td>Sur le PC et les appareils</td></tr>
+</table></div>
+</section>
+<section class="block" id="realisation"><h2>Réalisation</h2>
+<ol>
+<li><strong>Installation</strong> — Home Assistant OS installé le 14/09/2026 sur le Raspberry Pi 5. Bail DHCP statique sur la Freebox pour que le Pi garde toujours la même adresse.</li>
+<li><strong>Intégration des appareils</strong> — ampoule LSC via Tuya, Google Home Mini, TV Android et multiprise Meross en HomeKit. Entités renommées clairement (Écran, Télé, Lumière…) et rangées dans la pièce « Chambre ».</li>
+<li><strong>Accès distant</strong> — nom de domaine DuckDNS et certificat Let's Encrypt pour l'accès HTTPS, validé depuis mon téléphone en 4G. Commande vocale par Google Assistant, configurée dans Google Cloud Console, sans abonnement Nabu Casa. Tailscale pour un accès VPN.</li>
+<li><strong>DNS filtrant</strong> — AdGuard Home sur le Pi. Sur le PC, DNS réglé à la main sur AdGuard Home, avec la Freebox en DNS secondaire.</li>
+<li><strong>Pilotage du PC</strong> — allumage : la prise du PC est coupée puis remise, et le réglage BIOS « AC Back » démarre le PC au retour du courant. Extinction propre : HASS.Agent reçoit l'ordre par MQTT (Mosquitto, utilisateur dédié), seulement après validation sur l'iPhone ; une automatisation coupe ensuite l'écran et la prise du PC. Prise en main à distance avec RustDesk.</li>
+<li><strong>Scénarios</strong> — trois scripts : « Tout allumer », « Mode jeu » (écran et PC, sans la TV) et « Tout couper » (avec validation). Interrupteurs « Télé » et « Mode couleur » pour un pilotage simple.</li>
+<li><strong>Interfaces</strong> — widget iPhone à 8 commandes, et tableau de bord « Maison » avec un thème et des cartes personnalisées en JavaScript (ciel animé selon le soleil, météo, boutons de scénarios).</li>
+<li><strong>Sécurisation</strong> — double authentification par notification iPhone, sauvegardes automatiques chiffrées sur le Pi et sur Google Drive (voir plus bas).</li>
+</ol>
+</section>
+<section class="block" id="securite"><h2>Sécurité et continuité de service</h2>
+<p>J'ai listé les risques principaux et la mesure mise en place pour chacun.</p>
+<div class="tw"><table class="risk">
+<tr><th>Risque</th><th>Mesure</th></tr>
+<tr><td>PC éteint par erreur (commande vocale mal comprise, mauvais bouton)</td><td>Validation obligatoire par notification iPhone ; le bouton brut d'extinction de HASS.Agent est masqué</td></tr>
+<tr><td>Mot de passe du compte volé, alors que l'interface est accessible depuis Internet</td><td>Double authentification : un code de connexion est envoyé sur mon iPhone</td></tr>
+<tr><td>Carte microSD du Pi en panne, mauvaise manipulation</td><td>Sauvegarde automatique chaque nuit, chiffrée, 3 versions gardées, copie hors site sur Google Drive</td></tr>
+<tr><td>Perte de la clé de chiffrement des sauvegardes</td><td>Clé et kit d'urgence conservés hors du Pi</td></tr>
+<tr><td>Publicités, traqueurs, domaines malveillants</td><td>AdGuard Home comme DNS du PC, en IPv4 et en IPv6</td></tr>
+<tr><td>Accès distant en clair</td><td>HTTPS avec certificat Let's Encrypt ; Tailscale pour le reste</td></tr>
+</table></div>
+</section>
+<section class="block" id="tests"><h2>Tests</h2>
+<div class="tw"><table>
+<tr><th>Test</th><th>Méthode</th><th>Résultat</th></tr>
+<tr><td>Allumage et extinction du PC à distance</td><td>Depuis Home Assistant, avec validation sur l'iPhone</td><td><span class="pill ok">Validé le 28/10/2026</span></td></tr>
+<tr><td>PC déjà allumé</td><td>Lancer l'allumage alors que le PC tourne</td><td><span class="pill ok">Le script s'arrête sans couper la prise</span></td></tr>
+<tr><td>Sauvegarde automatique</td><td>Contrôle de l'état des sauvegardes le 28/10/2026</td><td><span class="pill ok">Réussie, enregistrée sur le Pi et Google Drive</span></td></tr>
+<tr><td>Sauvegarde hors site</td><td>Sauvegarde de test lancée à la main</td><td><span class="pill ok">43 Mo, présente sur le Pi et Google Drive (28/10/2026)</span></td></tr>
+<tr><td>Double authentification</td><td>Activation du module sur mon compte</td><td><span class="pill ok">Code reçu en notification sur l'iPhone et accepté</span></td></tr>
+<tr><td>Prise en main du PC à distance</td><td>RustDesk via Tailscale depuis un PC portable en partage de connexion 4G</td><td><span class="pill ok">OK</span></td></tr>
+<tr><td>Accès HTTPS distant</td><td>Depuis le téléphone en 4G, hors du réseau de la maison</td><td><span class="pill ok">OK</span></td></tr>
+</table></div>
+</section>
+<section class="block" id="difficultes"><h2>Difficultés rencontrées</h2>
+<ul>
+<li><strong>Fuite DNS en IPv6</strong> — le PC continuait d'utiliser le DNS de la box en IPv6 et contournait AdGuard Home ; j'ai aussi réglé le DNS IPv6 sur le Pi.</li>
+<li><strong>AdGuard Home injoignable</strong> — il n'écoutait que sur l'adresse locale du Pi (127.0.0.1) ; il écoute maintenant sur l'adresse du Pi dans le réseau.</li>
+<li><strong>Démarrage par la prise</strong> — une coupure de 4 secondes était trop courte pour que le PC redémarre ; elle a été portée à 20 secondes.</li>
+<li><strong>Extinction sans validation</strong> — le bouton créé automatiquement par HASS.Agent éteignait le PC sans passer par la notification ; je l'ai masqué pour que toute extinction passe par le script validé.</li>
+<li><strong>Capteur de température GPU</strong> — il ne remontait pas de valeur ; j'utilise la charge du GPU à la place.</li>
+</ul>
+</section>
+<section class="block" id="methode"><h2>Méthode de travail</h2>
+<p>Je définis le besoin et les règles (par exemple : aucune extinction sans ma validation), je m'appuie sur une IA pour écrire les automatisations et le code, puis je teste chaque fonction avant de la garder. Les étapes sensibles restent entre mes mains : publication de l'application Google, clé de chiffrement des sauvegardes, codes de connexion.</p>
+</section>
+<section class="block" id="suite"><h2>Évolutions prévues</h2>
+<ul>
+<li><strong>Caméra de surveillance locale</strong> — intégrer une petite caméra dans Home Assistant avec un stockage des images en local, sans fuite vers le cloud.</li>
+<li><strong>Sauvegardes vers mon NAS</strong> — une fois le NAS fait maison terminé.</li>
+<li><strong>Réseau séparé</strong> pour les objets connectés.</li>
+<li><strong>Wake-on-LAN</strong> quand le PC sera relié en câble RJ45.</li>
+</ul>
+</section>
+<section class="block" id="competences"><h2>Compétences mobilisées (bloc 1, épreuve E5)</h2>
+<div class="comp"><div class="comp-item"><span class="comp-code">6.1</span><div class="comp-txt"><b>Mettre en place son environnement d&#x27;apprentissage personnel</b>Monter et faire évoluer un homelab qui me sert à pratiquer le réseau, la sécurité et les sauvegardes. <a href="#realisation">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code alt">1.3</span><div class="comp-txt"><b>Mettre en place et vérifier les niveaux d&#x27;habilitation associés à un service</b>Double authentification, utilisateur MQTT dédié, validation obligatoire avant extinction. <a href="#securite">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code alt">1.5</span><div class="comp-txt"><b>Gérer des sauvegardes</b>Sauvegardes automatiques chiffrées, 3 versions, copie hors site, sauvegarde test vérifiée. <a href="#securite">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div><div class="comp-item"><span class="comp-code alt">5.1</span><div class="comp-txt"><b>Réaliser les tests d&#x27;intégration et d&#x27;acceptation d&#x27;un service</b>Tests d&#x27;allumage, d&#x27;extinction, de sauvegarde, d&#x27;accès distant et de double authentification. <a href="#tests">Voir l'explication</a> · <a href="#preuves">Voir les preuves</a></div></div></div>
+<p class="note">La compétence 6.1 est reportée dans mon <a href="../competences.html">tableau de synthèse E5</a>. Les autres codes (contour seul) montrent des pratiques liées, sans être reportées dans le tableau.</p></section>
+<section class="block" id="preuves"><h2>Preuves</h2><div class="gallery">
+<figure><a href="../preuves/homelab/ha-tableau-de-bord.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-tableau-de-bord.jpg" alt="Tableau de bord « Maison » : carte d&#x27;accueil personnalisée (ciel selon le soleil, météo, état du PC, d&#x27;Internet et du bloqueur de pubs) et boutons de scénarios" loading="lazy"></a><figcaption>Tableau de bord « Maison » : carte d&#x27;accueil personnalisée (ciel selon le soleil, météo, état du PC, d&#x27;Internet et du bloqueur de pubs) et boutons de scénarios</figcaption></figure>
+<figure><a href="../preuves/homelab/ha-vue-reseau.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-vue-reseau.jpg" alt="Vue Réseau : état de la fibre, temps de réponse sur 24 h et statistiques du bloqueur de pubs" loading="lazy"></a><figcaption>Vue Réseau : état de la fibre, temps de réponse sur 24 h et statistiques du bloqueur de pubs</figcaption></figure>
+<figure class="tall"><a href="../preuves/homelab/widget-iphone.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/widget-iphone.jpg" alt="Widget Home Assistant sur l&#x27;iPhone : les 8 commandes de la chambre" loading="lazy"></a><figcaption>Widget Home Assistant sur l&#x27;iPhone : les 8 commandes de la chambre</figcaption></figure>
+<figure class="tall"><a href="../preuves/homelab/ha-script-extinction-pc.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-script-extinction-pc.jpg" alt="Script « Éteindre le PC » : validation demandée sur l&#x27;iPhone, puis arrêt propre de Windows via HASS.Agent" loading="lazy"></a><figcaption>Script « Éteindre le PC » : validation demandée sur l&#x27;iPhone, puis arrêt propre de Windows via HASS.Agent</figcaption></figure>
+<figure><a href="../preuves/homelab/ha-double-authentification.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-double-authentification.jpg" alt="Double authentification active : un code est envoyé par notification sur l&#x27;iPhone" loading="lazy"></a><figcaption>Double authentification active : un code est envoyé par notification sur l&#x27;iPhone</figcaption></figure>
+<figure><a href="../preuves/homelab/ha-sauvegardes-etat.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-sauvegardes-etat.jpg" alt="État des sauvegardes : dernière sauvegarde automatique réussie, enregistrée dans 2 emplacements" loading="lazy"></a><figcaption>État des sauvegardes : dernière sauvegarde automatique réussie, enregistrée dans 2 emplacements</figcaption></figure>
+<figure><a href="../preuves/homelab/ha-sauvegardes-reglages.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-sauvegardes-reglages.jpg" alt="Sauvegarde automatique tous les jours, 3 sauvegardes conservées" loading="lazy"></a><figcaption>Sauvegarde automatique tous les jours, 3 sauvegardes conservées</figcaption></figure>
+<figure><a href="../preuves/homelab/ha-sauvegardes-emplacements.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/ha-sauvegardes-emplacements.jpg" alt="Emplacements des sauvegardes (le Pi et Google Drive) et chiffrement activé" loading="lazy"></a><figcaption>Emplacements des sauvegardes (le Pi et Google Drive) et chiffrement activé</figcaption></figure>
+<figure class="tall"><a href="../preuves/homelab/adguard-tableau-de-bord.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/adguard-tableau-de-bord.jpg" alt="AdGuard Home : 3 082 requêtes DNS en 24 h, dont 26 % bloquées" loading="lazy"></a><figcaption>AdGuard Home : 3 082 requêtes DNS en 24 h, dont 26 % bloquées</figcaption></figure>
+<figure class="tall"><a href="../preuves/homelab/dns-adguard-pc.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/dns-adguard-pc.jpg" alt="DNS du PC réglé sur AdGuard Home (192.168.1.133), la Freebox en secours" loading="lazy"></a><figcaption>DNS du PC réglé sur AdGuard Home (192.168.1.133), la Freebox en secours</figcaption></figure>
+<figure><a href="../preuves/homelab/hass-agent-installation.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/hass-agent-installation.jpg" alt="Installation de HASS.Agent 2.2.1 avec son service satellite" loading="lazy"></a><figcaption>Installation de HASS.Agent 2.2.1 avec son service satellite</figcaption></figure>
+<figure><a href="../preuves/homelab/hass-agent-demarrage.jpg" target="_blank" rel="noopener"><img src="../preuves/homelab/hass-agent-demarrage.jpg" alt="Configuration de HASS.Agent : lancement à l&#x27;ouverture de session" loading="lazy"></a><figcaption>Configuration de HASS.Agent : lancement à l&#x27;ouverture de session</figcaption></figure>
+</div>
+<p class="note">Captures réalisées sur mes appareils en octobre 2026. Informations masquées : l'indicateur de présence sur le tableau de bord et les adresses IPv6 publiques dans AdGuard Home.</p></section>
+<div class="pager"><a href="almeria-gestion-projet.html">← Organisation d'un projet client (cas Almeria / Serrurerie Papin)</a><span></span></div>
+</main>
+<footer class="pfoot">Tiago Fourier — BTS SIO SISR, Ésupec Cholet — <a href="../index.html">Retour au portfolio</a></footer>
+<button class="totop" type="button" aria-label="Revenir en haut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
+<script>
+(function(){var nodes=[].slice.call(document.querySelectorAll('.lab-map .node')),panel=document.getElementById('lab-panel');
+function sel(n){nodes.forEach(function(m){m.classList.remove('on');m.setAttribute('aria-pressed','false')});n.classList.add('on');n.setAttribute('aria-pressed','true');
+panel.querySelector('.k').textContent=n.getAttribute('data-k');panel.querySelector('h3').textContent=n.getAttribute('data-t');panel.querySelector('p').textContent=n.getAttribute('data-d');}
+nodes.forEach(function(n){n.addEventListener('click',function(){sel(n)});n.addEventListener('mouseenter',function(){if(matchMedia('(hover:hover)').matches)sel(n)});
+n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();sel(n)}})});
+var c=document.querySelector('.lab-map .node.core');if(c)sel(c);})();
+</script>
+</body>
+</html>
