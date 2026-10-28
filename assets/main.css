@@ -394,3 +394,4 @@ html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:
 .shot img{width:100%;height:200px;object-fit:cover;object-position:top;background:#0D1422}
 .shot span{display:block;font-size:13px;font-weight:600;color:var(--txt-2);padding:10px 14px;border-top:1px solid var(--border)}
 @media(max-width:760px){.lab-shots{grid-template-columns:1fr 1fr}.lab-shots .shot:first-child{grid-column:1/-1}}
+@media(max-height:820px){.scroll-hint{display:none}}
